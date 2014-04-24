@@ -1,0 +1,81 @@
+ -== UniRPG ==-
+ by Leslie Young
+ www.plyoung.com
+ -============-
+
+UniRPG Tile Ed.
+
+UniRPG Tile Ed. is an extension for the Unity3D editor which will help 
+you to setup and draw tile-based maps for your game(s).
+
+Please visit the Unity3D forum for more information and videos.
+I've included a PDF documentation but recommend you also
+watch the tutorial videos.
+
+http://forum.unity3d.com/threads/148235-UniRPG
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+
+*** Update Notes ***
+
+=== 1.9
+
+* Unity 4.3 compatibility release
+
+=== 1.8
+* Added a new features which allows updating tiles in the open scene after you amde an update to a tile set.
+	usefull for when you want to replace existing tileset with new art. The feature will be find in the
+	prefabDb as a new button called "Update Placed Tiles" when a set and tile definition is selected
+	(1.8b) Fixed a problem with Terrain 13-Tile system where tiles would be rotated while they should not be.
+
+=== 1.7
+* Changed the package folder to "UniRPG TileEd"
+* Fix small bug that occur if more normal tiles than auto-tiles are defined
+	(1.7b) Fixed a bug with copy/paste when tile size is not 1x1
+	(1.7c) - Fixed a cursor offset bug that ocur when you moved a map 
+		   - Added an option to toggle on/off the hiding of tile wireframes
+	(1.7d) Fixed a bug with tile cursor and plop placement offset when map height is changed
+	(1.7f) Fixed a bug preventing deletion of Expanding-Tile type on Dungeon Maps
+	(1.7g) Fixed a bug preventing deletion of Expanding-Tile when brush size is not 1
+	       DLLs must now be extracted from the ZIP files. This will prevent accidentally breaking
+		   existing maps when you do an update.
+	(1.7h) Fixed a problem where changes made to a prefab of the PrefabDB would not be saved.
+
+=== 1.6
+* Added copy-paste feature to allow copying and pasting tiles and keeping the linking with the map object
+* Added ability to collapse tile-sets in the inspector view so that they take up less space when not in use
+	(1.6b) Added option to set a mask to check against when placing pops and checking against colliders
+	
+=== 1.5
+* Tiles are now placed, keeping their prefab links.
+	(1.5b) Fixed a bug where duplicate tiles where placed when brushes bigger than 1 was used	
+	(1.5c) Fixed a bug caused when only normal tile-sets are defined
+
+=== 1.4
+* Added a 13-tile system for terrain tiles since the 4-tile system is too limited int some situations
+* Fixed a bug with tile/plop placement that occurs when the map object was moved from its default 0,0,0 position
+
+=== 1.3
+* This update includes the full source of UniRPG and instruction on how to compile the DLLs if you made changes
+* and includes a sample of how to add ramp like tiles to your terrain maps
+	(1.3b) updated API documentation
+	(1.3c) Unity 4 compatible DLLs in \Assets\UniRPG\Documentation\for_unity4.zip 
+	(extract to the Assets folder and overwrite existing files)
+	
+=== 1.2
+* Added requested features
+	- random floor tile piece from set when painting
+	- adjust height of plops according to existing plops to allow stacking
+	(1.2b) minor update to add new documentation
+	
+=== 1.1
+* Moved DLLs out of Assemblies folder. If you had a previous version, please 
+	move the following if the update did not do so...
+	UniRPGEditor.dll and UniRPGEditor.dll.mdb to \Assets\UniRPG\Editor\Scripts\ 
+	and
+	UniRPGRuntime.dll and UniRPGRuntime.dll.mdb to \Assets\UniRPG\Scripts\
+	Remove the Assemblies folder as it will not be used any longer.
+	
+=== 1.0
+* First release
