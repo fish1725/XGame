@@ -10,4 +10,13 @@ public class XGameUnitModel : XGameModel {
             Set("position", value);
         }
     }
+
+    public XGameUnitType type {
+        get {
+            return (XGameUnitType)Get("type");
+        }
+        set {
+            Set("type", value);
+        }
+    }
 }
