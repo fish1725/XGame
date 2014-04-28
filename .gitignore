@@ -57,7 +57,7 @@ build/
 *_i.c
 *_p.c
 *.ilk
-*.meta
+# *.meta
 *.obj
 *.pch
 *.pdb
@@ -246,7 +246,7 @@ obj/
 ehthumbs.db
 Thumbs.db
 
-# ============ #
+# ================ #
 # Custom generated #
-# ============ #
+# ================ #
 Build/

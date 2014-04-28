@@ -7,12 +7,12 @@ using UnityEngine;
 public class GameTriggerProxy {
 
     private object Data;
-    public IDictionary<string, IList<GameTrigger>> Triggers { get { return Data as IDictionary<string, IList<GameTrigger>>; } set { Data = value; } }
+    public IDictionary<string, IList<XGameTrigger>> Triggers { get { return Data as IDictionary<string, IList<XGameTrigger>>; } set { Data = value; } }
 
     public GameTriggerProxy() {
-        Triggers = new Dictionary<string, IList<GameTrigger>>();
+        Triggers = new Dictionary<string, IList<XGameTrigger>>();
         Load();
-        XmlSerializer serializer = new XmlSerializer(typeof(GameTrigger));
+        XmlSerializer serializer = new XmlSerializer(typeof(XGameTrigger));
         StringWriter sw = new StringWriter();
         serializer.Serialize(sw, Triggers[XGameEventType.Unit_Die.ToString()][0]);
         StringReader sr = new StringReader(sw.ToString());
@@ -46,16 +46,16 @@ public class GameTriggerProxy {
         //		});
     }
 
-    public void RegisterTrigger(GameTrigger trigger) {
+    public void RegisterTrigger(XGameTrigger trigger) {
         //if (!Triggers.ContainsKey(trigger.GameEventString())) {
         //    Triggers[trigger.GameEventString()] = new List<GameTrigger>();
         //}
         //Triggers[trigger.GameEventString()].Add(trigger);
     }
 
-    public List<GameTrigger> GetAllTriggers() {
-        List<GameTrigger> result = new List<GameTrigger>();
-        foreach (IList<GameTrigger> gts in Triggers.Values) {
+    public List<XGameTrigger> GetAllTriggers() {
+        List<XGameTrigger> result = new List<XGameTrigger>();
+        foreach (IList<XGameTrigger> gts in Triggers.Values) {
             result.AddRange(gts);
         }
         return result;

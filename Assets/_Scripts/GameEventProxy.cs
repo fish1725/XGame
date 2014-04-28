@@ -7,7 +7,7 @@ public class GameEventProxy {
 
 	}
 
-	[GameFunctionDescriptionAttribute("A unit {0}")]
+	[XGameFunctionDescriptionAttribute("A unit {0}")]
 	public static string GenericUnitEvent (string gameUnitEvent) {
 		return gameUnitEvent.ToString();
 	}
