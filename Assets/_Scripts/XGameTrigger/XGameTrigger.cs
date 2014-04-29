@@ -1,20 +1,19 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 public class XGameTrigger {
 
-    private List<XGameEvent> _gameEvents = null;
-    private List<XGameCondition> _gameConditions = null;
-    private List<XGameAction> _gameActions = null;
+    private XGameEvent[] _gameEvents = null;
+    private XGameCondition[] _gameConditions = null;
+    private XGameAction[] _gameActions = null;
     private Func<bool> _gameConditionCompiled = null;
 
-    public List<XGameEvent> gameEvents {
+    public XGameEvent[] gameEvents {
         get { return _gameEvents; }
         set { _gameEvents = value; }
     }
 
-    public List<XGameCondition> gameConditions {
+    public XGameCondition[] gameConditions {
         get { return _gameConditions; }
         set {
             _gameConditions = value;
@@ -22,7 +21,7 @@ public class XGameTrigger {
         }
     }
 
-    public List<XGameAction> gameActions {
+    public XGameAction[] gameActions {
         get {
             return _gameActions;
         }
@@ -31,20 +30,20 @@ public class XGameTrigger {
         }
     }
 
-    public void Execute(XGameEvent e) {
+    public void Execute() {
         if (_gameConditionCompiled == null) {
             CompileGameCondition();
         }
         if (_gameConditionCompiled()) {
             foreach (XGameAction action in gameActions) {
-                action.Execute(e);
+                action.Execute();
             }
         }
     }
 
     void CompileGameCondition() {
         Expression re = Expression.Constant(true);
-        for (int i = 0; i < gameConditions.Count; i++) {
+        for (int i = 0; i < gameConditions.Length; i++) {
             re = Expression.And(re, gameConditions[i].result);
         }
         _gameConditionCompiled = Expression.Lambda<Func<bool>>(re).Compile();

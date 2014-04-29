@@ -1,4 +1,5 @@
 ﻿
+using UnityEngine;
 public class GameFunctionProxy {
 	
 	public GameFunctionProxy () {
@@ -17,4 +18,9 @@ public class GameFunctionProxy {
 	public static int PlusOne (int i) {
 		return i+1;
 	}
+
+    [XGameFunctionDescriptionAttribute("Action test...")]
+    public static void ActionTest(int a) {
+        Debug.Log("Action test: " + a);
+    }
 }

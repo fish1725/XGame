@@ -3,13 +3,21 @@ using System;
 using System.Linq.Expressions;
 public class XGameAction : XGameMethodCallExpression {
 
-    private Action<XGameEvent> _resultCompiled = null;
+    private Action _resultCompiled = null;
 
-    public void Execute(XGameEvent e) {
+    public XGameAction (XGameExpression instance, string methodName, XGameExpression[] arguments) : base(instance, methodName, arguments) {
+
+    }
+
+    public void Execute() {
         if (_resultCompiled == null) {
-            _resultCompiled = Expression.Lambda<Action<XGameEvent>>(result).Compile();
+            _resultCompiled = Expression.Lambda<Action>(result).Compile();
         }
-        _resultCompiled(e);
+        _resultCompiled();
+    }
+
+    public static XGameAction Call(XGameExpression instance, string methodName, XGameExpression[] arguments) {
+        return new XGameAction(instance, methodName, arguments);
     }
 
 }

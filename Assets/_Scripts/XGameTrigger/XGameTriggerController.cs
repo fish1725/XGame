@@ -6,27 +6,29 @@ using System;
 
 public class XGameTriggerController : XGameController {
 
-    public XGameTrigger CreateTrigger() {
+    public XGameTrigger CreateTrigger(XGameEvent[] events, XGameCondition[] conditions, XGameAction[] actions) {
         XGameTrigger trigger = new XGameTrigger();
+        trigger.gameEvents = events;
+        trigger.gameConditions = conditions;
+        trigger.gameActions = actions;
         return trigger;
     }
 
     public void RegisterTrigger(XGameTrigger trigger) {
-
+        XGameEvent[] events = trigger.gameEvents;
+        foreach (XGameEvent e in events) {
+            XGameWorldEventDispatcher.instance.addEventListener(e.type, (XGameEvent ge) => { trigger.Execute(); });
+        }
     }
 
     public List<MethodInfo> GetAllGameActions() {
         List<MethodInfo> result = new List<MethodInfo>();
         Type type = typeof(GameFunctionProxy);
-        MethodInfo[] mis = type.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+        MethodInfo[] mis = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
         for (int i = 0; i < mis.Length; i++) {
-            //if (mis[i].ReturnType == typeof(void)) {
-            //    ParameterInfo[] pis = mis[i].GetParameters();
-            //    if (pis.Length == 1 && pis[0].ParameterType == typeof(XGameEvent)) {
-            //        result.Add(mis[i]);
-            //    }
-            //}
-            result.Add(mis[i]);
+            if (mis[i].ReturnType == typeof(void)) {
+                result.Add(mis[i]);
+            }
         }
         return result;
     }
@@ -34,13 +36,22 @@ public class XGameTriggerController : XGameController {
     public List<MethodInfo> GetAllGameConditions() {
         List<MethodInfo> result = new List<MethodInfo>();
         Type type = typeof(GameFunctionProxy);
-        MethodInfo[] mis = type.GetMethods(BindingFlags.Public | BindingFlags.Instance);
+        MethodInfo[] mis = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
         for (int i = 0; i < mis.Length; i++) {
             if (mis[i].ReturnType == typeof(bool)) {
                 result.Add(mis[i]);
             }
         }
         return result;
+    }
+
+    public List<XGameEvent> GetAllGameEvents() {
+        List<XGameEvent> events = new List<XGameEvent>();
+        Array es = Enum.GetValues(typeof(XGameEventType));
+        foreach (XGameEventType e in es) {
+            events.Add(new XGameEvent(e));
+        }
+        return events;
     }
 
 }
