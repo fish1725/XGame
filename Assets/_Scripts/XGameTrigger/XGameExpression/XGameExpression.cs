@@ -1,13 +1,13 @@
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Linq.Expressions;
-using UnityEngine;
+using System.Xml.Serialization;
 
 [System.Xml.Serialization.XmlInclude(typeof(XGameCondition))]
 [System.Xml.Serialization.XmlInclude(typeof(XGameConstantExpression))]
 [System.Xml.Serialization.XmlInclude(typeof(XGameMethodCallExpression))]
 public abstract class XGameExpression {
+
+    [XmlAttribute(AttributeName = "nodeType")]
     public XGameExpressionType nodeType { get; set; }
 
     [System.Xml.Serialization.XmlIgnore]

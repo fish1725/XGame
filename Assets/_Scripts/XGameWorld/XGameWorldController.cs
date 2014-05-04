@@ -3,7 +3,17 @@ using System.Collections.Generic;
 
 public class XGameWorldController : XGameController {
     private XGameWorldMapController _worldMapController = new XGameWorldMapController();
+
+    public XGameWorldMapController worldMapController {
+        get { return _worldMapController; }
+        set { _worldMapController = value; }
+    }
     private XGameCharacterController _characterController = new XGameCharacterController();
+
+    public XGameCharacterController characterController {
+        get { return _characterController; }
+        set { _characterController = value; }
+    }
 
     public XGameWorldModel CreateWorld() {
         XGameWorldModel world = new XGameWorldModel();

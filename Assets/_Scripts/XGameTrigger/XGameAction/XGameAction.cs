@@ -1,12 +1,15 @@
-﻿
-using System;
+﻿using System;
 using System.Linq.Expressions;
+
 public class XGameAction : XGameMethodCallExpression {
 
     private Action _resultCompiled = null;
 
-    public XGameAction (XGameExpression instance, string methodName, XGameExpression[] arguments) : base(instance, methodName, arguments) {
+    public XGameAction() {
+    }
 
+    public XGameAction(XGameExpression instance, string methodName, XGameExpression[] arguments)
+        : base(instance, methodName, arguments) {
     }
 
     public void Execute() {
@@ -16,7 +19,7 @@ public class XGameAction : XGameMethodCallExpression {
         _resultCompiled();
     }
 
-    public static XGameAction Call(XGameExpression instance, string methodName, XGameExpression[] arguments) {
+    public static XGameAction CreateAction(XGameExpression instance, string methodName, XGameExpression[] arguments) {
         return new XGameAction(instance, methodName, arguments);
     }
 

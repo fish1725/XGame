@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Xml.Serialization;
 
 public class XGameEvent {
     protected XGameEventType _type;
     protected string _message;
     protected object _data;
 
+    [XmlAttribute(AttributeName = "type")]
     public XGameEventType type {
         get { return _type; }
         set { _type = value; }

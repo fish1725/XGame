@@ -1,9 +1,9 @@
 ﻿using System.Reflection;
 using System.Linq.Expressions;
+using System;
 
 public class XGameMethodCallExpression : XGameExpression {
 
-    [System.Xml.Serialization.XmlIgnore]
     public override System.Linq.Expressions.Expression result {
         get {
             Expression[] exps = new Expression[arguments.Length];
@@ -22,7 +22,24 @@ public class XGameMethodCallExpression : XGameExpression {
             return _method.Name;
         }
         set {
-            _method = typeof(GameFunctionProxy).GetMethod(value);
+            if (instance != null) {
+                _method = instance.type.GetMethod(value);
+            } else {
+                Type superClassType = typeof(XGameController);
+                Assembly a = Assembly.GetAssembly(superClassType);
+                Type[] types = a.GetTypes();
+                foreach (Type t in types) {
+                    if (t.IsClass && t.IsSubclassOf(superClassType)) {
+                        if (t.GetMethod(value) != null) {
+                            _method = t.GetMethod(value);
+                            break;
+                        }
+                    }
+                }
+            }
+            if (_method == null) {
+                throw new Exception("method '" + value + "' is not found!");
+            }
             this.type = _method.ReturnType;
         }
     }

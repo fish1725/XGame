@@ -23,7 +23,7 @@ public class XGameTriggerController : XGameController {
 
     public List<MethodInfo> GetAllGameActions() {
         List<MethodInfo> result = new List<MethodInfo>();
-        Type type = typeof(GameFunctionProxy);
+        Type type = typeof(XGameController);
         MethodInfo[] mis = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
         for (int i = 0; i < mis.Length; i++) {
             if (mis[i].ReturnType == typeof(void)) {
@@ -35,7 +35,7 @@ public class XGameTriggerController : XGameController {
 
     public List<MethodInfo> GetAllGameConditions() {
         List<MethodInfo> result = new List<MethodInfo>();
-        Type type = typeof(GameFunctionProxy);
+        Type type = typeof(XGameController);
         MethodInfo[] mis = type.GetMethods(BindingFlags.Public | BindingFlags.Static);
         for (int i = 0; i < mis.Length; i++) {
             if (mis[i].ReturnType == typeof(bool)) {

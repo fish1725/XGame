@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class XGameCharacterController : XGameController {
 
@@ -12,4 +11,7 @@ public class XGameCharacterController : XGameController {
         cha.position = pos;
     }
 
+    public void SetTest(int a) {
+        Debug.Log("SetTest: " + a);
+    }
 }
