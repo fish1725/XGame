@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class XGameView : MonoBehaviour{
-    private XGameModel _model;
+public class XGameView<T> : MonoBehaviour where T : XGameModel {
+    private T _model;
 
-    virtual public XGameModel Model {
+    public T Model {
         get { return _model; }
         set { _model = value; }
     }

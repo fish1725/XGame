@@ -5,7 +5,9 @@ public class XGame : MonoBehaviour {
 
     private static Hashtable _instances = new Hashtable();
 
-    public static T CreateView<T>(XGameModel model) where T : XGameView {
+    public static T CreateView<T, TT>(TT model)
+        where T : XGameView<TT>
+        where TT : XGameModel {
         GameObject go = new GameObject();
         go.name = typeof(T).ToString();
         T view = go.AddComponent<T>();
@@ -29,8 +31,8 @@ public class XGame : MonoBehaviour {
         return (T)(_instances[typeof(T).ToString()]);
     }
 
-    virtual public void Setup() { 
-        
+    virtual public void Setup() {
+
     }
 
     void Start() {

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class XGameCameraView : XGameView {
+public class XGameCameraView : XGameView<XGameModel> {
     public Transform _target;
     // The distance in the x-z plane to the target
     public float distance = 8.0f;

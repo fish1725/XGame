@@ -1,14 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class XGameCharacterView : XGameUnitView {
+public class XGameCharacterView : XGameUnitView<XGameCharacterModel> {
     private GameObject _shadow;
 
-    new public XGameCharacterModel Model {
-        get { return base.Model as XGameCharacterModel; }
-        set { base.Model = value; }
-    }
-    
     void Start() {
         Init();
         XGameWorldEventDispatcher.instance.broadcast(XGameEventType.Character_Created);

@@ -2,12 +2,7 @@
 using System.Collections;
 using ProD;
 
-public class XGameWorldMapView : XGameView {
-
-    new public XGameWorldMapModel Model {
-        get { return base.Model as XGameWorldMapModel; }
-        set { base.Model = value; }
-    }
+public class XGameWorldMapView : XGameView<XGameWorldMapModel> {
 
     void Start() {
     }

@@ -35,7 +35,7 @@ public class XGameWorld : XGame {
         // world
         XGameWorldModel world = _worldController.CreateWorld();
 
-        XGameWorldView view = CreateView<XGameWorldView>(world);
+        XGameWorldView view = CreateView<XGameWorldView, XGameWorldModel>(world);
         view.transform.parent = transform;
 
         _worldController.InitWorldMap(world);

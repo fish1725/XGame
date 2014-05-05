@@ -2,12 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class XGameWorldView : XGameView {
-
-    new public XGameWorldModel Model {
-        get { return base.Model as XGameWorldModel; }
-        set { base.Model = value; }
-    }
+public class XGameWorldView : XGameView<XGameWorldModel> {
 
     public override void InitEvents() {
         base.InitEvents();
@@ -17,7 +12,7 @@ public class XGameWorldView : XGameView {
 
     void InitWorldMap(XGameEvent e) {
         XGameWorldMapModel map = e.data as XGameWorldMapModel;
-        XGameWorldMapView view = XGame.CreateView<XGameWorldMapView>(map);
+        XGameWorldMapView view = XGame.CreateView<XGameWorldMapView, XGameWorldMapModel>(map);
         GameObject gameMap = GameObject.Find("XGameMap");
         if (gameMap == null) {
             gameMap = new GameObject("XGameMap");
@@ -29,7 +24,7 @@ public class XGameWorldView : XGameView {
 
     void InitCharacters(XGameEvent e) {
         XGameCharacterModel c = e.data as XGameCharacterModel;
-        XGameCharacterView view = XGame.CreateView<XGameCharacterView>(c);
+        XGameCharacterView view = XGame.CreateView<XGameCharacterView, XGameCharacterModel>(c);
         GameObject gameUnits = GameObject.Find("XGameUnits");
         if (gameUnits == null) {
             gameUnits = new GameObject("XGameUnits");
