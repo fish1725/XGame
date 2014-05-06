@@ -28,7 +28,6 @@ GameObject:
   - 114: {fileID: 11400004}
   - 65: {fileID: 6500000}
   - 114: {fileID: 11400002}
-  - 114: {fileID: 11400010}
   m_Layer: 8
   m_Name: Popup List
   m_TagString: Untagged
@@ -43,7 +42,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8, y: 0, z: 0}
+  m_LocalPosition: {x: 160, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 400004}
@@ -54,7 +53,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 939, y: -298, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400000}
@@ -69,7 +68,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 320, y: 64, z: 0}
+  m_Size: {x: 320, y: 80, z: 0}
   m_Center: {x: 160, y: 0, z: 0}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -101,14 +100,14 @@ MonoBehaviour:
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 3
   mWidth: 320
-  mHeight: 64
+  mHeight: 80
   mDepth: 5
   autoResizeBoxCollider: 1
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 5
-  mAtlas: {fileID: 11400000, guid: 62adb30369acbf943a67cee0f69267a3, type: 2}
-  mSpriteName: Button
+  aspectRatio: 4
+  mAtlas: {fileID: 11400000, guid: 5972a05e4e9f54dc1909acd10ef861af, type: 2}
+  mSpriteName: ButtonBG
   mType: 1
   mFillDirection: 4
   mFillAmount: 1
@@ -148,16 +147,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e428c9b6087304da439ec665b56a2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  atlas: {fileID: 11400000, guid: 62adb30369acbf943a67cee0f69267a3, type: 2}
+  atlas: {fileID: 11400000, guid: 5972a05e4e9f54dc1909acd10ef861af, type: 2}
   bitmapFont: {fileID: 0}
   trueTypeFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   fontSize: 32
   fontStyle: 0
-  backgroundSprite: Button
-  highlightSprite: Button
+  backgroundSprite: ButtonBG
+  highlightSprite: Icon_BG
   position: 0
-  items: []
-  padding: {x: 4, y: 8}
+  items:
+  - 1
+  - 2
+  - 3
+  - 4
+  padding: {x: 10, y: 25}
   textColor: {r: 0, g: 0, b: 0, a: .839215696}
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
   highlightColor: {r: .87843138, g: .78039217, b: .58431375, a: 1}
@@ -167,7 +170,7 @@ MonoBehaviour:
   - mTarget: {fileID: 11400006}
     mMethodName: SetCurrentSelection
     oneShot: 0
-  mSelectedItem: 
+  mSelectedItem: 1
   eventReceiver: {fileID: 0}
   functionName: 
   textScale: 0
@@ -200,15 +203,15 @@ MonoBehaviour:
     target: {fileID: 400004}
     relative: 1
     absolute: -4
-  mColor: {r: .126865685, g: .126865685, b: .126865685, a: 1}
-  mPivot: 3
+  mColor: {r: 0, g: 0, b: 0, a: 1}
+  mPivot: 4
   mWidth: 304
-  mHeight: 56
+  mHeight: 72
   mDepth: 6
   autoResizeBoxCollider: 0
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 7.5999999
+  aspectRatio: 4.22222233
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
   mFont: {fileID: 0}
@@ -217,7 +220,7 @@ MonoBehaviour:
   mFontStyle: 0
   mEncoding: 1
   mMaxLineCount: 1
-  mEffectStyle: 2
+  mEffectStyle: 1
   mEffectColor: {r: 1, g: 1, b: 1, a: 1}
   mSymbols: 1
   mEffectDistance: {x: 1, y: 1}
@@ -233,17 +236,6 @@ MonoBehaviour:
   mMaxLineHeight: 0
   mLineWidth: 0
   mMultiline: 1
---- !u!114 &11400010
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100004}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f14048e31576684eae4cb28bc1aeb68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
