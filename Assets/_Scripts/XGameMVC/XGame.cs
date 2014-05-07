@@ -18,6 +18,7 @@ public class XGame : MonoBehaviour {
 
     public static T CreateController<T>() where T : XGameController, new() {
         T controller = new T();
+        RegisterInstance<T>(controller);
         return controller;
     }
 

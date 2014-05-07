@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class XGameWindowView : XGameView<XGameModel> {
+public class XGameWindowView : XGameView<XGameWindowModel> {
 
     private bool _isMax = false;
     private bool _isMin = false;
@@ -20,13 +20,29 @@ public class XGameWindowView : XGameView<XGameModel> {
         set { _isMin = value; }
     }
 
-    void Start() {
-
+    void Awake() {
+        InitPanel();
+        InitTitle();
     }
 
+    void InitPanel() {
+        UIWidget widget = gameObject.AddComponent<UIWidget>();
+        widget.width = _lastWidth;
+        widget.height = _lastHeight;
+        gameObject.AddComponent<UIPanel>();
+        gameObject.layer = LayerMask.NameToLayer("UI");
+    }
 
-    void Update() {
-
+    void InitTitle() {
+        UISprite sprite = NGUITools.AddSprite(gameObject, XGameEditor.Resolve<UIAtlas>(), "TitleBG");
+        sprite.SetAnchor(gameObject, 0, -100, 0, 0);
+        sprite.bottomAnchor.relative = 1;
+        UIDragObject udo = sprite.gameObject.AddComponent<UIDragObject>();
+        udo.target = transform;
+        udo.restrictWithinPanel = true;
+        udo.contentRect = sprite;
+        NGUITools.AddWidgetCollider(sprite.gameObject);
+        sprite.gameObject.AddComponent<XGameWindowTitle>();
     }
 
     public void Close() {

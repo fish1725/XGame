@@ -7,7 +7,7 @@ public class XGameWorldView : XGameView<XGameWorldModel> {
     public override void InitEvents() {
         base.InitEvents();
         Model.On("change:worldMap", InitWorldMap);
-        Model.On("add:characters", InitCharacters);
+        Model.On("add:characters", AddCharacter);
     }
 
     void InitWorldMap(XGameEvent e) {
@@ -22,7 +22,7 @@ public class XGameWorldView : XGameView<XGameWorldModel> {
         view.transform.parent = gameMap.transform;
     }
 
-    void InitCharacters(XGameEvent e) {
+    void AddCharacter(XGameEvent e) {
         XGameCharacterModel c = e.data as XGameCharacterModel;
         XGameCharacterView view = XGame.CreateView<XGameCharacterView, XGameCharacterModel>(c);
         GameObject gameUnits = GameObject.Find("XGameUnits");
