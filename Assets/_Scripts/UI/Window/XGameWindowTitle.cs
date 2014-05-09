@@ -7,15 +7,7 @@ public class XGameWindowTitle : MonoBehaviour {
 
     void OnDragStart() {
         if (!target) {
-            Transform temp = transform;
-            while (temp) {
-                XGameWindowView gw = temp.GetComponent<XGameWindowView>();
-                if (gw) {
-                    target = gw;
-                    break;
-                }
-                temp = temp.parent;
-            }
+            target = XGameObjectUtil.GetComponentInAncestors<XGameWindowView>(gameObject);
         }
         if (target)
             target.Maximum(false);
@@ -23,15 +15,7 @@ public class XGameWindowTitle : MonoBehaviour {
 
     void OnDoubleClick() {
         if (!target) {
-            Transform temp = transform;
-            while (temp) {
-                XGameWindowView gw = temp.GetComponent<XGameWindowView>();
-                if (gw) {
-                    target = gw;
-                    break;
-                }
-                temp = temp.parent;
-            }
+            target = XGameObjectUtil.GetComponentInAncestors<XGameWindowView>(gameObject);
         }
         if (target) {
             target.Maximum(!target.IsMax);
