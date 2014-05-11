@@ -5,14 +5,20 @@ public class XGame : MonoBehaviour {
 
     private static Hashtable _instances = new Hashtable();
 
-    public static T CreateView<T, TT>(TT model)
+    public static T CreateView<T, TT>(TT model, GameObject parent = null)
         where T : XGameView<TT>
         where TT : XGameModel {
         GameObject go = new GameObject();
         go.name = typeof(T).ToString();
+        if (parent != null) {
+            go.transform.parent = parent.transform;
+            go.layer = parent.layer;
+        }
+        go.transform.localScale = Vector3.one;
         T view = go.AddComponent<T>();
         view.Model = model;
         view.InitEvents();
+        view.Init();
         return view;
     }
 

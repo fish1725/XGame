@@ -5,17 +5,16 @@ public class XGameEditorView : XGameView<XGameEditorModel> {
 
     private UIAtlas _atlas = null;
     private UISprite _navMenu = null;
-    private int _topDepth = 100;
+
+    public override void Init() {
+        InitUIRoot();
+        InitNavMenu();
+    }
 
     public override void InitEvents() {
         base.InitEvents();
         Model.On("add:windows", AddWindow);
         Model.On("change:triggers", InitTriggersButton);
-    }
-
-    void Awake() {
-        InitUIRoot();
-        InitNavMenu();
     }
 
     void InitUIRoot() {
@@ -49,15 +48,20 @@ public class XGameEditorView : XGameView<XGameEditorModel> {
         bs.hover = Vector3.one;
         bs.pressed = new Vector3(0.9f, 0.9f, 0.9f);
         b.onClick.Add(new EventDelegate(
-            () => { XGame.Resolve<XGameEditorController>().CreateWindow(XGame.Resolve<XGameEditorModel>()); }
+            () => {
+                XGameEditorController editorController = XGame.Resolve<XGameEditorController>();
+                XGameWindowModel window = editorController.CreateWindow(XGame.Resolve<XGameEditorModel>());
+                foreach (XGameTrigger trigger in Model.triggers) {
+                    XGameWindowContentItemModel item = new XGameWindowContentItemModel() { name = trigger.name, spriteName = "Buttons_RightArrow" };
+                    editorController.windowController.AddWindowContent(window, item);
+                }
+            }
             ));
     }
 
     void AddWindow(XGameEvent e) {
-        XGameWindowView view = XGame.CreateView<XGameWindowView, XGameWindowModel>(e.data as XGameWindowModel);
-        view.transform.parent = transform;
-        view.transform.localScale = Vector3.one;
-        view.GetComponent<UIPanel>().depth = _topDepth++;
+        XGameWindowView view = XGame.CreateView<XGameWindowView, XGameWindowModel>(e.data as XGameWindowModel, gameObject);
+        view.BringForward();
     }
 
 

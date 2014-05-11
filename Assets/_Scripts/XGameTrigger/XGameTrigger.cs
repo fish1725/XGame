@@ -3,10 +3,16 @@ using System.Linq.Expressions;
 
 public class XGameTrigger {
 
+    private string _name = null;
     private XGameEvent[] _gameEvents = null;
     private XGameCondition[] _gameConditions = null;
     private XGameAction[] _gameActions = null;
     private Func<bool> _gameConditionCompiled = null;
+    
+    public string name {
+        get { return _name; }
+        set { _name = value; }
+    }
 
     public XGameEvent[] gameEvents {
         get { return _gameEvents; }

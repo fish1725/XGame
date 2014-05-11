@@ -21,12 +21,28 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
         set { _isMin = value; }
     }
 
-    void Awake() {
+    public override void Init() {
         InitPanel();
         InitContentWrapper();
         InitTitle();
         InitButtons();
         InitResizer();
+        InitListContent();
+    }
+
+    public override void InitEvents() {
+        base.InitEvents();
+        Model.On("add:content", OnAddWindowContent);
+    }
+
+    void OnAddWindowContent(XGameEvent e) {
+        UITable table = GetComponentInChildren<UITable>();
+        if (table) {
+            XGameWindowContentItemModel item = e.data as XGameWindowContentItemModel;
+            XGameEditor.CreateView<XGameWindowContentItemView, XGameWindowContentItemModel>(item, table.gameObject);
+            table.repositionNow = true;
+            table.StartCoroutine(XGameObjectUtil.WaitAndDo(1, () => { GetComponentInChildren<UIScrollView>().ResetPosition(); }));
+        }
     }
 
     void InitPanel() {
@@ -60,36 +76,37 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
         UISprite sprite = NGUITools.AddSprite(_title, XGameEditor.Resolve<UIAtlas>(), "Buttons_Cancel");
         sprite.SetAnchor(_title, -90, 10, -10, -10);
         sprite.leftAnchor.relative = 1;
-        sprite.gameObject.AddComponent<UIButton>();
+        NGUITools.AddWidgetCollider(sprite.gameObject);
+        UIButton button = sprite.gameObject.AddComponent<UIButton>();
+        button.defaultColor = Color.white;
         UIButtonScale bs = sprite.gameObject.AddComponent<UIButtonScale>();
         bs.hover = Vector3.one;
         bs.pressed = new Vector3(0.9f, 0.9f, 0.9f);
         sprite.gameObject.AddComponent<XGameWindowCloseButton>();
-        NGUITools.AddWidgetCollider(sprite.gameObject);
     }
 
     void InitMaxButton() {
         UISprite sprite = NGUITools.AddSprite(_title, XGameEditor.Resolve<UIAtlas>(), "Buttons_LevelSelect");
         sprite.SetAnchor(_title, -170, 10, -90, -10);
         sprite.leftAnchor.relative = 1;
+        NGUITools.AddWidgetCollider(sprite.gameObject);
         sprite.gameObject.AddComponent<UIButton>();
         UIButtonScale bs = sprite.gameObject.AddComponent<UIButtonScale>();
         bs.hover = Vector3.one;
         bs.pressed = new Vector3(0.9f, 0.9f, 0.9f);
         sprite.gameObject.AddComponent<XGameWindowMaxButton>();
-        NGUITools.AddWidgetCollider(sprite.gameObject);
     }
 
     void InitMinButton() {
         UISprite sprite = NGUITools.AddSprite(_title, XGameEditor.Resolve<UIAtlas>(), "Buttons_Decrease");
         sprite.SetAnchor(_title, -250, 10, -170, -10);
         sprite.leftAnchor.relative = 1;
+        NGUITools.AddWidgetCollider(sprite.gameObject);
         sprite.gameObject.AddComponent<UIButton>();
         UIButtonScale bs = sprite.gameObject.AddComponent<UIButtonScale>();
         bs.hover = Vector3.one;
         bs.pressed = new Vector3(0.9f, 0.9f, 0.9f);
         sprite.gameObject.AddComponent<XGameWindowMinButton>();
-        NGUITools.AddWidgetCollider(sprite.gameObject);
     }
 
     void InitContentWrapper() {
@@ -103,13 +120,18 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
         UIWidget resizer = NGUITools.AddWidget<UIWidget>(_contentWrapper);
         resizer.SetAnchor(gameObject, -80, 0, 0, 80);
         resizer.leftAnchor.relative = 1;
-        resizer.topAnchor.relative = 1;
+        resizer.topAnchor.relative = 0;
         NGUITools.AddWidgetCollider(resizer.gameObject);
         UIDragResize dr = resizer.gameObject.AddComponent<UIDragResize>();
         dr.target = GetComponent<UIWidget>();
         dr.pivot = UIWidget.Pivot.BottomRight;
         dr.minHeight = 480;
         dr.minWidth = 600;
+    }
+
+    void InitListContent() {
+        GameObject sv = XGameUIUtil.CreateScrollViewContent(_contentWrapper);
+        sv.GetComponentInChildren<UIPanel>().depth = gameObject.GetComponent<UIPanel>().depth + 1;
     }
 
     public void Close() {
@@ -130,12 +152,14 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
                     position.y = _lastY;
                     transform.localPosition = position;
                 }
+                GetComponentInChildren<UIDragResize>().collider.enabled = true;
             } else {
                 _lastWidth = widget.width;
                 _lastHeight = widget.height;
                 _lastX = transform.localPosition.x;
                 _lastY = transform.localPosition.y;
                 widget.SetAnchor(widget.root.gameObject, 0, 0, 0, 0);
+                GetComponentInChildren<UIDragResize>().collider.enabled = false;
             }
         }
     }
@@ -147,5 +171,9 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
                 _contentWrapper = transform.Find("ContentWrapper").gameObject;
             _contentWrapper.GetComponent<UIWidget>().alpha = _isMin ? 0 : 1;
         }
+    }
+
+    public void BringForward() {
+        NGUITools.BringForward(gameObject);
     }
 }

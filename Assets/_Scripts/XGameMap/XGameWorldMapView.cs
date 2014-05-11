@@ -3,15 +3,7 @@ using System.Collections;
 using ProD;
 
 public class XGameWorldMapView : XGameView<XGameWorldMapModel> {
-
-    void Start() {
-    }
-
-    // Update is called once per frame
-    void Update() {
-
-    }
-
+    
     public override void InitEvents() {
         Model.On("change:map", InitModel);
     }

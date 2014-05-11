@@ -6,8 +6,9 @@ using System;
 
 public class XGameTriggerController : XGameController {
 
-    public XGameTrigger CreateTrigger(XGameEvent[] events, XGameCondition[] conditions, XGameAction[] actions) {
+    public XGameTrigger CreateTrigger(string name, XGameEvent[] events, XGameCondition[] conditions, XGameAction[] actions) {
         XGameTrigger trigger = new XGameTrigger();
+        trigger.name = name;
         trigger.gameEvents = events;
         trigger.gameConditions = conditions;
         trigger.gameActions = actions;

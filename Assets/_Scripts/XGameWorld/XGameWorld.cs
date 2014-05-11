@@ -17,7 +17,7 @@ public class XGameWorld : XGame {
         XGameAction action = XGameAction.CreateAction(XGameExpression.Constant(_worldController.characterController), "SetTest", new XGameExpression[] { XGameExpression.Constant(100) });
         XGameCondition condition = XGameCondition.BooleanComparison(XGameExpression.Constant(2), XGameExpression.Constant(1), XGameConditionOperator.GreaterThan);
         XGameCondition condition2 = XGameCondition.BooleanComparison(XGameExpression.Constant(3), XGameExpression.Constant(3), XGameConditionOperator.GreaterThanOrEqual);
-        XGameTrigger trigger = _triggerController.CreateTrigger(new XGameEvent[] { new XGameEvent(XGameEventType.Character_Created) }, new XGameCondition[] { condition, condition2 }, new XGameAction[] { action });
+        XGameTrigger trigger = _triggerController.CreateTrigger("trigger", new XGameEvent[] { new XGameEvent(XGameEventType.Character_Created) }, new XGameCondition[] { condition, condition2 }, new XGameAction[] { action });
 
         Type[] types = { typeof(XGameController) };
         XmlSerializer serializer = new XmlSerializer(typeof(XGameTrigger), types);
@@ -35,8 +35,7 @@ public class XGameWorld : XGame {
         // world
         XGameWorldModel world = _worldController.CreateWorld();
 
-        XGameWorldView view = CreateView<XGameWorldView, XGameWorldModel>(world);
-        view.transform.parent = transform;
+        CreateView<XGameWorldView, XGameWorldModel>(world, gameObject);
 
         _worldController.InitWorldMap(world);
         _worldController.InitCharacters(world);

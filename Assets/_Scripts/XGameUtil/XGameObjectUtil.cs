@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class XGameObjectUtil {
 
@@ -14,5 +15,15 @@ public class XGameObjectUtil {
             temp = temp.parent;
         }
         return null;
+    }
+
+    public static IEnumerator WaitAndDo(int ret, Action act) {
+        yield return ret;
+        act();
+    }
+
+    public static IEnumerator WaitAndDo(YieldInstruction ret, Action act) {
+        yield return ret;
+        act();
     }
 }

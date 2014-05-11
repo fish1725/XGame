@@ -9,8 +9,10 @@ public class XGameWindowTitle : MonoBehaviour {
         if (!target) {
             target = XGameObjectUtil.GetComponentInAncestors<XGameWindowView>(gameObject);
         }
-        if (target)
+        if (target) {
             target.Maximum(false);
+        }
+
     }
 
     void OnDoubleClick() {
@@ -20,7 +22,18 @@ public class XGameWindowTitle : MonoBehaviour {
         if (target) {
             target.Maximum(!target.IsMax);
             target.Minimum(false);
-            target.GetComponent<SpringPosition>().enabled = false;
+            SpringPosition sp = target.GetComponent<SpringPosition>();
+            if (sp)
+                sp.enabled = false;
+        }
+    }
+
+    void OnPress() {
+        if (!target) {
+            target = XGameObjectUtil.GetComponentInAncestors<XGameWindowView>(gameObject);
+        }
+        if (target) {
+            target.BringForward();
         }
     }
 }

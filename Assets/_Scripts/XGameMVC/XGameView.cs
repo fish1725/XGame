@@ -8,16 +8,12 @@ public class XGameView<T> : MonoBehaviour where T : XGameModel {
         get { return _model; }
         set { _model = value; }
     }
-
-    void Start() {
-
-    }
-
-    void Update() {
-
-    }
-
+    
     virtual public void InitEvents() {
+
+    }
+
+    virtual public void Init() {
 
     }
 }

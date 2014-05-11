@@ -5,7 +5,6 @@ public class XGameCharacterView : XGameUnitView<XGameCharacterModel> {
     private GameObject _shadow;
 
     void Start() {
-        Init();
         XGameWorldEventDispatcher.instance.broadcast(XGameEventType.Character_Created);
     }
 
@@ -13,7 +12,7 @@ public class XGameCharacterView : XGameUnitView<XGameCharacterModel> {
 
     }
 
-    void Init() {
+    public override void Init() {
         InitModel();
         InitShadow();
         InitLayer();
