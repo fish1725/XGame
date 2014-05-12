@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class XGameModel {
+public class XGameModel : IXGameModel {
     private Hashtable _properties = new Hashtable();
     private XGameEventDispatcher _events = new XGameEventDispatcher();
 
     public XGameModel() {
+        id = Guid.NewGuid();
     }
 
     protected void Set(string property, object value) {
@@ -27,9 +29,10 @@ public class XGameModel {
 
     protected void Remove<T>(string property, T value) {
         if (_properties[property] != null) {
-            (_properties[property] as List<T>).Remove(value);
+            if ((_properties[property] as List<T>).Remove(value)) {
+                _events.broadcast("remove:" + property, new XGameEvent() { data = value });
+            }
         }
-        _events.broadcast("remove:" + property, new XGameEvent() { data = value });
     }
 
     public void On(string eventName, XGameEventHandler func) {
@@ -40,8 +43,8 @@ public class XGameModel {
         _events.removeEventListener(eventName, func);
     }
 
-    public int id {
-        get { return (int)Get("id"); }
+    public Guid id {
+        get { return (Guid)(Get("id")); }
         set { Set("id", value); }
     }
 

@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Xml.Serialization;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System;
+using System.Xml.Serialization;
+using UnityEngine;
 
 public class XGameWorld : XGame {
     private XGameWorldController _worldController = null;
@@ -17,7 +17,7 @@ public class XGameWorld : XGame {
         XGameAction action = XGameAction.CreateAction(XGameExpression.Constant(_worldController.characterController), "SetTest", new XGameExpression[] { XGameExpression.Constant(100) });
         XGameCondition condition = XGameCondition.BooleanComparison(XGameExpression.Constant(2), XGameExpression.Constant(1), XGameConditionOperator.GreaterThan);
         XGameCondition condition2 = XGameCondition.BooleanComparison(XGameExpression.Constant(3), XGameExpression.Constant(3), XGameConditionOperator.GreaterThanOrEqual);
-        XGameTrigger trigger = _triggerController.CreateTrigger("trigger", new XGameEvent[] { new XGameEvent(XGameEventType.Character_Created) }, new XGameCondition[] { condition, condition2 }, new XGameAction[] { action });
+        XGameTrigger trigger = _triggerController.CreateTrigger("trigger", new List<XGameEvent> { new XGameEvent(XGameEventType.Character_Created) }, new List<XGameCondition> { condition, condition2 }, new List<XGameAction> { action });
 
         Type[] types = { typeof(XGameController) };
         XmlSerializer serializer = new XmlSerializer(typeof(XGameTrigger), types);

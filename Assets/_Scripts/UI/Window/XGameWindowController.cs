@@ -8,7 +8,11 @@ public class XGameWindowController : XGameController {
         return window;
     }
 
-    public void AddWindowContent(XGameWindowModel window, XGameWindowContentItemModel item) {
+    public void AddWindowContent(XGameWindowModel window, IXGameWindowContentItemModel item) {
         window.AddContent(item);
+    }
+
+    public void SetWindowActive(XGameWindowModel window, bool active) {
+        window.active = active;
     }
 }

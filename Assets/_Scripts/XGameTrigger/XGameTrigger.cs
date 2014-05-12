@@ -1,39 +1,27 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
-public class XGameTrigger {
+public class XGameTrigger : XGameModel, IXGameWindowContentItemModel {
 
-    private string _name = null;
-    private XGameEvent[] _gameEvents = null;
-    private XGameCondition[] _gameConditions = null;
-    private XGameAction[] _gameActions = null;
     private Func<bool> _gameConditionCompiled = null;
-    
-    public string name {
-        get { return _name; }
-        set { _name = value; }
+
+    public List<XGameEvent> gameEvents {
+        get { return Get("gameEvents") as List<XGameEvent>; }
+        set { Set("gameEvents", value); }
     }
 
-    public XGameEvent[] gameEvents {
-        get { return _gameEvents; }
-        set { _gameEvents = value; }
-    }
-
-    public XGameCondition[] gameConditions {
-        get { return _gameConditions; }
+    public List<XGameCondition> gameConditions {
+        get { return Get("gameConditions") as List<XGameCondition>; }
         set {
-            _gameConditions = value;
+            Set("gameConditions", value);
             CompileGameCondition();
         }
     }
 
-    public XGameAction[] gameActions {
-        get {
-            return _gameActions;
-        }
-        set {
-            _gameActions = value;
-        }
+    public List<XGameAction> gameActions {
+        get { return Get("gameActions") as List<XGameAction>; }
+        set { Set("gameActions", value); }
     }
 
     public void Execute() {
@@ -49,9 +37,18 @@ public class XGameTrigger {
 
     void CompileGameCondition() {
         Expression re = Expression.Constant(true);
-        for (int i = 0; i < gameConditions.Length; i++) {
+        for (int i = 0; i < gameConditions.Count; i++) {
             re = Expression.And(re, gameConditions[i].result);
         }
         _gameConditionCompiled = Expression.Lambda<Func<bool>>(re).Compile();
+    }
+
+    public string spriteName {
+        get {
+            return "Buttons_RightArrow";
+        }
+        set {
+            name = value;
+        }
     }
 }

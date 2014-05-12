@@ -33,15 +33,24 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
     public override void InitEvents() {
         base.InitEvents();
         Model.On("add:content", OnAddWindowContent);
+        Model.On("change:active", OnChangeActive);
     }
 
     void OnAddWindowContent(XGameEvent e) {
         UITable table = GetComponentInChildren<UITable>();
         if (table) {
-            XGameWindowContentItemModel item = e.data as XGameWindowContentItemModel;
-            XGameEditor.CreateView<XGameWindowContentItemView, XGameWindowContentItemModel>(item, table.gameObject);
+            IXGameWindowContentItemModel item = e.data as IXGameWindowContentItemModel;
+            XGameEditor.CreateView<XGameWindowContentItemView, IXGameWindowContentItemModel>(item, table.gameObject);
             table.repositionNow = true;
             table.StartCoroutine(XGameObjectUtil.WaitAndDo(1, () => { GetComponentInChildren<UIScrollView>().ResetPosition(); }));
+        }
+    }
+
+    void OnChangeActive(XGameEvent e) {
+        bool active = (bool)e.data;
+        gameObject.SetActive(active);
+        if (active) {
+            NGUITools.BringForward(gameObject);
         }
     }
 
@@ -73,39 +82,26 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
     }
 
     void InitCloseButton() {
-        UISprite sprite = NGUITools.AddSprite(_title, XGameEditor.Resolve<UIAtlas>(), "Buttons_Cancel");
+        GameObject imageButton = XGameUIUtil.CreateImageButton(_title, "Buttons_Cancel");
+        UISprite sprite = imageButton.GetComponent<UISprite>();
         sprite.SetAnchor(_title, -90, 10, -10, -10);
         sprite.leftAnchor.relative = 1;
-        NGUITools.AddWidgetCollider(sprite.gameObject);
-        UIButton button = sprite.gameObject.AddComponent<UIButton>();
-        button.defaultColor = Color.white;
-        UIButtonScale bs = sprite.gameObject.AddComponent<UIButtonScale>();
-        bs.hover = Vector3.one;
-        bs.pressed = new Vector3(0.9f, 0.9f, 0.9f);
-        sprite.gameObject.AddComponent<XGameWindowCloseButton>();
+        imageButton.AddComponent<XGameWindowCloseButton>();
     }
 
     void InitMaxButton() {
-        UISprite sprite = NGUITools.AddSprite(_title, XGameEditor.Resolve<UIAtlas>(), "Buttons_LevelSelect");
+        GameObject imageButton = XGameUIUtil.CreateImageButton(_title, "Buttons_LevelSelect");
+        UISprite sprite = imageButton.GetComponent<UISprite>();
         sprite.SetAnchor(_title, -170, 10, -90, -10);
         sprite.leftAnchor.relative = 1;
-        NGUITools.AddWidgetCollider(sprite.gameObject);
-        sprite.gameObject.AddComponent<UIButton>();
-        UIButtonScale bs = sprite.gameObject.AddComponent<UIButtonScale>();
-        bs.hover = Vector3.one;
-        bs.pressed = new Vector3(0.9f, 0.9f, 0.9f);
         sprite.gameObject.AddComponent<XGameWindowMaxButton>();
     }
 
     void InitMinButton() {
-        UISprite sprite = NGUITools.AddSprite(_title, XGameEditor.Resolve<UIAtlas>(), "Buttons_Decrease");
+        GameObject imageButton = XGameUIUtil.CreateImageButton(_title, "Buttons_Decrease");
+        UISprite sprite = imageButton.GetComponent<UISprite>();
         sprite.SetAnchor(_title, -250, 10, -170, -10);
         sprite.leftAnchor.relative = 1;
-        NGUITools.AddWidgetCollider(sprite.gameObject);
-        sprite.gameObject.AddComponent<UIButton>();
-        UIButtonScale bs = sprite.gameObject.AddComponent<UIButtonScale>();
-        bs.hover = Vector3.one;
-        bs.pressed = new Vector3(0.9f, 0.9f, 0.9f);
         sprite.gameObject.AddComponent<XGameWindowMinButton>();
     }
 
@@ -135,7 +131,7 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
     }
 
     public void Close() {
-        GameObject.Destroy(gameObject);
+        XGame.Resolve<XGameWindowController>().SetWindowActive(Model, false);
     }
 
     public void Maximum(bool max, bool rePosition = true) {

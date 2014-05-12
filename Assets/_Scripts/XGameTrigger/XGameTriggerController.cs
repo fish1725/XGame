@@ -6,8 +6,9 @@ using System;
 
 public class XGameTriggerController : XGameController {
 
-    public XGameTrigger CreateTrigger(string name, XGameEvent[] events, XGameCondition[] conditions, XGameAction[] actions) {
+    public XGameTrigger CreateTrigger(string name, List<XGameEvent> events, List<XGameCondition> conditions, List<XGameAction> actions) {
         XGameTrigger trigger = new XGameTrigger();
+        trigger.id = Guid.NewGuid();
         trigger.name = name;
         trigger.gameEvents = events;
         trigger.gameConditions = conditions;
@@ -16,7 +17,7 @@ public class XGameTriggerController : XGameController {
     }
 
     public void RegisterTrigger(XGameTrigger trigger) {
-        XGameEvent[] events = trigger.gameEvents;
+        List<XGameEvent> events = trigger.gameEvents;
         foreach (XGameEvent e in events) {
             XGameWorldEventDispatcher.instance.addEventListener(e.type, (XGameEvent ge) => { trigger.Execute(); });
         }

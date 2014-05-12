@@ -2,7 +2,6 @@
 using System.Collections;
 
 public class XGameEditor : XGame {
-    private XGameEditorController _editorController = null;
 
     public Font font;
 
@@ -15,14 +14,21 @@ public class XGameEditor : XGame {
         if (font) {
             RegisterInstance<Font>(font);
         }
-        
-        _editorController = CreateController<XGameEditorController>();
 
-        XGameEditorModel editorModel = _editorController.CreateEditor();
+        InitControllers();
+
+        XGameEditorModel editorModel = Resolve<XGameEditorController>().CreateEditor();
         CreateView<XGameEditorView, XGameEditorModel>(editorModel, gameObject);
 
-        _editorController.InitTriggers(editorModel);
+        Resolve<XGameEditorController>().InitTriggers(editorModel);
         RegisterInstance<XGameEditorModel>(editorModel);
+    }
+
+    void InitControllers() {
+        CreateController<XGameEditorController>();
+        CreateController<XGameWindowController>();
+        CreateController<XGameTriggerController>();
+        CreateController<XGameCharacterController>();
     }
 
 }

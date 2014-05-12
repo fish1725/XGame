@@ -7,7 +7,7 @@ public class XGame : MonoBehaviour {
 
     public static T CreateView<T, TT>(TT model, GameObject parent = null)
         where T : XGameView<TT>
-        where TT : XGameModel {
+        where TT : IXGameModel {
         GameObject go = new GameObject();
         go.name = typeof(T).ToString();
         if (parent != null) {

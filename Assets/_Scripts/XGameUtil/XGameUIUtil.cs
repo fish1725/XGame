@@ -3,6 +3,28 @@ using System.Collections;
 
 public class XGameUIUtil {
 
+    public static GameObject CreateImageButton(GameObject gameObject, string spriteName) {
+        UISprite sprite = NGUITools.AddSprite(gameObject, XGame.Resolve<UIAtlas>(), spriteName);
+        NGUITools.AddWidgetCollider(sprite.gameObject);
+        sprite.gameObject.AddComponent<UIButton>();
+        UIButtonScale bs = sprite.gameObject.AddComponent<UIButtonScale>();
+        bs.hover = Vector3.one;
+        bs.pressed = new Vector3(0.9f, 0.9f, 0.9f);
+        return sprite.gameObject;
+    }
+
+    public static GameObject CreateLabel(GameObject gameObject, string content, int fontSize = 32) {
+        UILabel label = NGUITools.AddChild<UILabel>(gameObject);
+        label.trueTypeFont = XGame.Resolve<Font>();
+        label.text = content;
+        label.fontSize = fontSize;
+        label.color = Color.black;
+        label.overflowMethod = UILabel.Overflow.ResizeFreely;
+        label.effectStyle = UILabel.Effect.Shadow;
+        label.effectColor = Color.white;
+        return label.gameObject;
+    }
+
     public static GameObject CreateScrollViewContent(GameObject gameObject) {
         UISprite sprite = NGUITools.AddSprite(gameObject, XGame.Resolve<UIAtlas>(), "TitleBG");
         sprite.SetAnchor(gameObject, 30, 30, -30, -120);

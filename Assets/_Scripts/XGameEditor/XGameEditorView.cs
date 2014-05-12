@@ -52,8 +52,7 @@ public class XGameEditorView : XGameView<XGameEditorModel> {
                 XGameEditorController editorController = XGame.Resolve<XGameEditorController>();
                 XGameWindowModel window = editorController.CreateWindow(XGame.Resolve<XGameEditorModel>());
                 foreach (XGameTrigger trigger in Model.triggers) {
-                    XGameWindowContentItemModel item = new XGameWindowContentItemModel() { name = trigger.name, spriteName = "Buttons_RightArrow" };
-                    editorController.windowController.AddWindowContent(window, item);
+                    XGame.Resolve<XGameWindowController>().AddWindowContent(window, trigger);
                 }
             }
             ));
