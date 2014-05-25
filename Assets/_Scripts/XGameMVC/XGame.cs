@@ -22,6 +22,14 @@ public class XGame : MonoBehaviour {
         return view;
     }
 
+    public static void RemoveView<T, TT>(T view)
+        where T : XGameView<TT>
+        where TT : IXGameModel {
+        GameObject go = view.gameObject;
+        view.dispose();
+        GameObject.Destroy(go);
+    }
+
     public static T CreateController<T>() where T : XGameController, new() {
         T controller = new T();
         RegisterInstance<T>(controller);

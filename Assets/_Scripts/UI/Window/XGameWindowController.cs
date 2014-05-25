@@ -12,6 +12,10 @@ public class XGameWindowController : XGameController {
         window.AddContent(item);
     }
 
+    public void ClearWindowContent(XGameWindowModel window) {
+        window.RemoveAllContent();
+    }
+
     public void SetWindowActive(XGameWindowModel window, bool active) {
         window.active = active;
     }

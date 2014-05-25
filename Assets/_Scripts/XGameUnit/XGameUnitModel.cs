@@ -11,12 +11,12 @@ public class XGameUnitModel : XGameModel {
         }
     }
 
-    public XGameUnitType type {
+    public XGameUnitType unitType {
         get {
-            return (XGameUnitType)Get("type");
+            return (XGameUnitType)Get("unitType");
         }
         set {
-            Set("type", value);
+            Set("unitType", value);
         }
     }
 }

@@ -9,11 +9,15 @@ public class XGameView<T> : MonoBehaviour where T : IXGameModel {
         set { _model = value; }
     }
 
-    virtual public void InitEvents() {
+    public virtual void InitEvents() {
 
     }
 
-    virtual public void Init() {
+    public virtual void Init() {
+
+    }
+
+    public virtual void dispose() {
 
     }
 }

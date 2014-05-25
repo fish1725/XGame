@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class XGameModel : IXGameModel {
+public class XGameModel : IXGameModel, IXGameWindowContentItemModel {
     private Hashtable _properties = new Hashtable();
     private XGameEventDispatcher _events = new XGameEventDispatcher();
 
@@ -48,8 +48,69 @@ public class XGameModel : IXGameModel {
         set { Set("id", value); }
     }
 
-    public string name {
+    public virtual string name {
         get { return Get("name") as string; }
         set { Set("name", value); }
+    }
+
+    public virtual string spriteName {
+        get {
+            return "Buttons_RightArrow";
+        }
+        set {
+            name = value;
+        }
+    }
+
+    [System.Xml.Serialization.XmlIgnore]
+    public virtual List<IXGameWindowContentItemModel> windowContentItems {
+        get {
+            Debug.Log("get items.");
+            List<IXGameWindowContentItemModel> items = new List<IXGameWindowContentItemModel>();
+            foreach (DictionaryEntry de in _properties) {
+                Type t = de.Value.GetType();
+                String className = "XGameWindowContentItemModel" + t.Name;
+                Debug.Log("prop: " + de.Key.ToString() + " : " + de.Value.ToString() + " className: " + className);
+                Type itemType;
+                if ((itemType = Type.GetType(className)) != null) {
+                    Debug.Log("type: " + itemType.ToString());
+                    IXGameWindowContentItemModel item = itemType.Assembly.CreateInstance(className) as IXGameWindowContentItemModel;
+                    item.value = de.Value;
+                    item.name = de.Key.ToString();
+                    items.Add(item);
+                } else {
+
+                }
+            }
+            return items;
+        }
+        set {
+            throw new NotImplementedException();
+        }
+    }
+
+
+    public virtual object value {
+        get {
+            return this;
+        }
+        set {
+            throw new NotImplementedException();
+        }
+    }
+
+    public virtual Type type {
+        get {
+            throw new NotImplementedException();
+        }
+        set {
+            throw new NotImplementedException();
+        }
+    }
+
+
+
+    public virtual void Save(object value) {
+        
     }
 }

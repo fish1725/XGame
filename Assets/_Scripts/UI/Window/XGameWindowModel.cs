@@ -17,6 +17,19 @@ public class XGameWindowModel : XGameModel {
         Remove<IXGameWindowContentItemModel>("content", item);
     }
 
+    public void RemoveAllContent() {
+        if (content != null) {
+            List<IXGameWindowContentItemModel> itemsToRemove = new List<IXGameWindowContentItemModel>();
+            for (int i = 0, length = content.Count; i < length; i++) {
+                itemsToRemove.Add(content[i]);
+            }
+            foreach (IXGameWindowContentItemModel item in itemsToRemove) {
+                Remove<IXGameWindowContentItemModel>("content", item);
+            }
+        }
+            
+    }
+
     public bool active {
         get { return (bool)Get("active"); }
         set { Set("active", value); }

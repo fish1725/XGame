@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-public class XGameTrigger : XGameModel, IXGameWindowContentItemModel {
+public class XGameTrigger : XGameModel {
 
     private Func<bool> _gameConditionCompiled = null;
 
@@ -43,12 +43,8 @@ public class XGameTrigger : XGameModel, IXGameWindowContentItemModel {
         _gameConditionCompiled = Expression.Lambda<Func<bool>>(re).Compile();
     }
 
-    public string spriteName {
-        get {
-            return "Buttons_RightArrow";
-        }
-        set {
-            name = value;
-        }
+    public float testint {
+        get { return (float)Get("testint"); }
+        set { Set("testint", value); }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class XGameWindowView : XGameView<XGameWindowModel> {
 
@@ -11,6 +12,8 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
     private float _lastY = 0;
     private GameObject _contentWrapper;
     private GameObject _title;
+
+    private List<XGameWindowContentItemView> _items = new List<XGameWindowContentItemView>();
 
     public bool IsMax {
         get { return _isMax; }
@@ -33,6 +36,7 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
     public override void InitEvents() {
         base.InitEvents();
         Model.On("add:content", OnAddWindowContent);
+        Model.On("remove:content", OnRemoveWindowContent);
         Model.On("change:active", OnChangeActive);
     }
 
@@ -40,7 +44,23 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
         UITable table = GetComponentInChildren<UITable>();
         if (table) {
             IXGameWindowContentItemModel item = e.data as IXGameWindowContentItemModel;
-            XGameEditor.CreateView<XGameWindowContentItemView, IXGameWindowContentItemModel>(item, table.gameObject);
+            _items.Add(XGameEditor.CreateView<XGameWindowContentItemView, IXGameWindowContentItemModel>(item, table.gameObject));
+            table.repositionNow = true;
+            table.StartCoroutine(XGameObjectUtil.WaitAndDo(1, () => { GetComponentInChildren<UIScrollView>().ResetPosition(); }));
+        }
+    }
+
+    void OnRemoveWindowContent(XGameEvent e) {
+        UITable table = GetComponentInChildren<UITable>();
+        if (table) {
+            IXGameWindowContentItemModel item = e.data as IXGameWindowContentItemModel;
+            XGameWindowContentItemView viewToRemove = null;
+            foreach (XGameWindowContentItemView view in _items) {
+                if (view.Model == item)
+                    viewToRemove = view;
+            }
+            if (viewToRemove != null)
+                XGame.RemoveView<XGameWindowContentItemView, IXGameWindowContentItemModel>(viewToRemove);
             table.repositionNow = true;
             table.StartCoroutine(XGameObjectUtil.WaitAndDo(1, () => { GetComponentInChildren<UIScrollView>().ResetPosition(); }));
         }
@@ -131,6 +151,7 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
     }
 
     public void Close() {
+        Save();
         XGame.Resolve<XGameWindowController>().SetWindowActive(Model, false);
     }
 
@@ -171,5 +192,11 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
 
     public void BringForward() {
         NGUITools.BringForward(gameObject);
+    }
+
+    public void Save() {
+        foreach (XGameWindowContentItemView view in _items) {
+            view.Save();
+        }
     }
 }
