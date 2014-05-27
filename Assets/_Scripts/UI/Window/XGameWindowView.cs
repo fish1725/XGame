@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Reflection;
 
 public class XGameWindowView : XGameView<XGameWindowModel> {
 
@@ -44,7 +46,18 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
         UITable table = GetComponentInChildren<UITable>();
         if (table) {
             IXGameWindowContentItemModel item = e.data as IXGameWindowContentItemModel;
-            _items.Add(XGameEditor.CreateView<XGameWindowContentItemView, IXGameWindowContentItemModel>(item, table.gameObject));
+            Type gameType = typeof(XGame);
+            Type viewType = Type.GetType("XGameWindowContentItemView" + item.value.GetType().Name);
+            if (viewType == null) {
+                viewType = Type.GetType("XGameWindowContentItemView");
+            }
+            MethodInfo methodDefine = gameType.GetMethod("CreateView", BindingFlags.Public | BindingFlags.Static);
+            Type[] genericTypes = { viewType, typeof(IXGameWindowContentItemModel) };
+            MethodInfo constructed = methodDefine.MakeGenericMethod(genericTypes);
+            object[] args = { item, table.gameObject };
+            object view = constructed.Invoke(null, args);
+
+            _items.Add(view as XGameWindowContentItemView);
             table.repositionNow = true;
             table.StartCoroutine(XGameObjectUtil.WaitAndDo(1, () => { GetComponentInChildren<UIScrollView>().ResetPosition(); }));
         }

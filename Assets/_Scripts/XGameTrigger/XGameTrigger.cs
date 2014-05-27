@@ -43,8 +43,8 @@ public class XGameTrigger : XGameModel {
         _gameConditionCompiled = Expression.Lambda<Func<bool>>(re).Compile();
     }
 
-    public float testint {
-        get { return (float)Get("testint"); }
+    public XGameUnitModel testint {
+        get { return Get("testint") as XGameUnitModel; }
         set { Set("testint", value); }
     }
 }

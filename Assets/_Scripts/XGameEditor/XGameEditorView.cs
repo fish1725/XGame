@@ -54,6 +54,7 @@ public class XGameEditorView : XGameView<XGameEditorModel> {
                 foreach (XGameTrigger trigger in Model.triggers) {
                     XGame.Resolve<XGameWindowController>().AddWindowContent(window, trigger);
                 }
+                //XGame.Resolve<XGameWindowController>().AddWindowContent(window, Model);
             }
             ));
     }

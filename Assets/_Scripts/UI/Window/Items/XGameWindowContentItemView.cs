@@ -6,14 +6,20 @@ using System;
 public class XGameWindowContentItemView : XGameView<IXGameWindowContentItemModel> {
     private UISprite _itemSprite;
     private UILabel _itemName;
-    private UIInput _itemInput;
     private XGameWindowModel _window;
     private List<IXGameWindowContentItemModel> _items;
-    private float _leftX = 0f;
-    private static Type[] editableTypes = { typeof(string), typeof(int), typeof(float) };
+
+    public List<IXGameWindowContentItemModel> items {
+        get {
+            if (_items == null) {
+                _items = Model.windowContentItems;
+            }
+            return _items;
+        }
+    }
+    protected float _leftX = 0f;
 
     public override void Init() {
-        _items = Model.windowContentItems;
         InitSprite();
         InitName();
         InitInput();
@@ -25,44 +31,38 @@ public class XGameWindowContentItemView : XGameView<IXGameWindowContentItemModel
         Model.On("change:name", OnChangeName);
     }
 
-    public bool editable {
-        get { return Array.Exists<Type>(editableTypes, t => t == Model.value.GetType()); }
-    }
-
     void InitSprite() {
         if (Model.spriteName != null && Model.spriteName != "") {
             GameObject imageButton = XGameUIUtil.CreateImageButton(gameObject, Model.spriteName);
             _itemSprite = imageButton.GetComponent<UISprite>();
-            UIButton button = imageButton.GetComponent<UIButton>();
-            button.onClick.Add(new EventDelegate(
-                    () => {
-                        if (_window == null) {
-                            _window = XGame.Resolve<XGameEditorController>().CreateWindow(XGame.Resolve<XGameEditorModel>());
-                        }
-                        XGame.Resolve<XGameWindowController>().SetWindowActive(_window, true);
-                        XGame.Resolve<XGameWindowController>().ClearWindowContent(_window);
-                        foreach (IXGameWindowContentItemModel item in _items) {
-                            XGame.Resolve<XGameWindowController>().AddWindowContent(_window, item);
-                        }
-                    }
-                ));
+
             _leftX += _itemSprite.width + 10;
         }
     }
 
     void InitName() {
-        GameObject nameLabel = XGameUIUtil.CreateLabel(gameObject, Model.name);
+        GameObject nameLabel = XGameUIUtil.CreateLabel(gameObject, Model.key);
         nameLabel.transform.localPosition = new Vector3(_leftX, 0f, 0f);
         _itemName = nameLabel.GetComponent<UILabel>();
         _leftX += _itemName.width + 10;
     }
 
-    void InitInput() {
-        if (editable) {
-            GameObject input = XGameUIUtil.CreateInput(gameObject, Model.value.ToString());
-            input.transform.localPosition = new Vector3(_leftX, 0f, 0f);
-            _itemInput = input.GetComponent<UIInput>();
-        }
+    protected virtual void InitInput() {
+        GameObject textButton = XGameUIUtil.CreateTextButton(gameObject, Model.value.ToString());
+        textButton.transform.localPosition = new Vector3(_leftX, 0f, 0f);
+        UIButton button = textButton.GetComponent<UIButton>();
+        button.onClick.Add(new EventDelegate(
+                () => {
+                    if (_window == null) {
+                        _window = XGame.Resolve<XGameEditorController>().CreateWindow(XGame.Resolve<XGameEditorModel>());
+                        XGame.Resolve<XGameWindowController>().ClearWindowContent(_window);
+                        foreach (IXGameWindowContentItemModel item in items) {
+                            XGame.Resolve<XGameWindowController>().AddWindowContent(_window, item);
+                        }
+                    }
+                    XGame.Resolve<XGameWindowController>().SetWindowActive(_window, true);
+                }
+            ));
     }
 
     void OnChangeSpriteName(XGameEvent e) {
@@ -73,9 +73,10 @@ public class XGameWindowContentItemView : XGameView<IXGameWindowContentItemModel
         _itemName.text = e.data as string;
     }
 
-    public void Save() {
-        if (_itemInput != null) {
-            Model.Save(_itemInput.value);
+    public virtual void Save() {
+        foreach (IXGameWindowContentItemModel item in items) {
+            Model.Set(item.key, item.value);
+            //Debug.Log("key: " + item.key + " value: " + item.value);
         }
     }
 

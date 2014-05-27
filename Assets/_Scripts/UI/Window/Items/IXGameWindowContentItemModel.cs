@@ -7,6 +7,8 @@ public interface IXGameWindowContentItemModel : IXGameModel {
     
     string spriteName { get; set; }
 
+    string key { get; set; }
+
     object value { get; set; }
 
     Type type { get; set; }

@@ -3,6 +3,10 @@ using System.Collections;
 
 public class XGameWindowContentItemModel : XGameModel, IXGameWindowContentItemModel {
 
+    private string _key;
+    private object _value;
+
+
     public override string spriteName {
         get {
             return "";
@@ -23,10 +27,19 @@ public class XGameWindowContentItemModel : XGameModel, IXGameWindowContentItemMo
 
     public override object value {
         get {
-            return Get("value");
+            return _value;
         }
         set {
-            Set("value", value);
+            _value = value;
+        }
+    }
+
+    public override string key {
+        get {
+            return _key;
+        }
+        set {
+            _key = value;
         }
     }
 

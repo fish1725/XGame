@@ -13,7 +13,7 @@ public class XGameUIUtil {
         return sprite.gameObject;
     }
 
-    public static GameObject CreateTextButton(GameObject gameObject, string content) {
+    public static GameObject CreateTextButton(GameObject gameObject, string content, int fontSize = 32) {
         UISprite sprite = NGUITools.AddSprite(gameObject, XGame.Resolve<UIAtlas>(), "ButtonBG");
         NGUITools.AddWidgetCollider(sprite.gameObject);
         sprite.gameObject.AddComponent<UIButton>();
@@ -21,6 +21,14 @@ public class XGameUIUtil {
         bs.hover = Vector3.one;
         bs.pressed = new Vector3(0.9f, 0.9f, 0.9f);
         UILabel label = NGUITools.AddWidget<UILabel>(sprite.gameObject);
+        label.SetAnchor(sprite.gameObject);
+        label.trueTypeFont = XGame.Resolve<Font>();
+        label.text = content;
+        label.fontSize = fontSize;
+        label.color = Color.black;
+        label.overflowMethod = UILabel.Overflow.ResizeFreely;
+        label.effectStyle = UILabel.Effect.Shadow;
+        label.effectColor = Color.white;
         return sprite.gameObject;
     }
 

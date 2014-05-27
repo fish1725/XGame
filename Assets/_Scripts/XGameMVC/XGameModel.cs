@@ -1,21 +1,29 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 public class XGameModel : IXGameModel, IXGameWindowContentItemModel {
     private Hashtable _properties = new Hashtable();
     private XGameEventDispatcher _events = new XGameEventDispatcher();
+    private String _key;
+
+    public Hashtable properties {
+        get { return _properties; }
+        protected set { _properties = value; }
+    }
 
     public XGameModel() {
         id = Guid.NewGuid();
+        name = this.GetType().Name;
     }
 
-    protected void Set(string property, object value) {
+    public void Set(string property, object value) {
         _properties[property] = value;
         _events.broadcast("change:" + property, new XGameEvent() { data = value });
     }
 
-    protected object Get(string property) {
+    public object Get(string property) {
         return _properties[property];
     }
 
@@ -43,6 +51,12 @@ public class XGameModel : IXGameModel, IXGameWindowContentItemModel {
         _events.removeEventListener(eventName, func);
     }
 
+    public void CopyFrom(XGameModel model) {
+        foreach (String p in model.properties.Keys) {
+            Set(p, model.properties[p]);
+        }
+    }
+
     public Guid id {
         get { return (Guid)(Get("id")); }
         set { Set("id", value); }
@@ -65,21 +79,21 @@ public class XGameModel : IXGameModel, IXGameWindowContentItemModel {
     [System.Xml.Serialization.XmlIgnore]
     public virtual List<IXGameWindowContentItemModel> windowContentItems {
         get {
-            Debug.Log("get items.");
+            //Debug.Log("get items.");
             List<IXGameWindowContentItemModel> items = new List<IXGameWindowContentItemModel>();
             foreach (DictionaryEntry de in _properties) {
                 Type t = de.Value.GetType();
                 String className = "XGameWindowContentItemModel" + t.Name;
-                Debug.Log("prop: " + de.Key.ToString() + " : " + de.Value.ToString() + " className: " + className);
-                Type itemType;
-                if ((itemType = Type.GetType(className)) != null) {
-                    Debug.Log("type: " + itemType.ToString());
-                    IXGameWindowContentItemModel item = itemType.Assembly.CreateInstance(className) as IXGameWindowContentItemModel;
-                    item.value = de.Value;
-                    item.name = de.Key.ToString();
+                //Debug.Log("prop: " + de.Key.ToString() + " : " + de.Value.ToString() + " className: " + className);
+                IXGameWindowContentItemModel item = CreateWindowContentItem(className, de.Key, de.Value);
+                if (item != null) {
                     items.Add(item);
                 } else {
-
+                    className = t.Name;
+                    item = CreateWindowContentItem(className, de.Key, de.Value);
+                    if (item != null) {
+                        items.Add(item);
+                    }
                 }
             }
             return items;
@@ -89,28 +103,57 @@ public class XGameModel : IXGameModel, IXGameWindowContentItemModel {
         }
     }
 
+    private IXGameWindowContentItemModel CreateWindowContentItem(String className, object key, object value) {
+        Type itemType;
+        if ((itemType = Type.GetType(className)) != null && typeof(IXGameWindowContentItemModel).IsAssignableFrom(itemType)) {
+            //Debug.Log("type: " + itemType.ToString());
+            IXGameWindowContentItemModel item = Activator.CreateInstance(itemType) as IXGameWindowContentItemModel;
+            item.value = value;
+            item.key = key.ToString();
+            return item;
+        } else return null;
+    }
+
 
     public virtual object value {
         get {
             return this;
         }
         set {
-            throw new NotImplementedException();
+            CopyFrom(value as XGameModel);
         }
     }
 
     public virtual Type type {
         get {
-            throw new NotImplementedException();
+            return this.GetType();
         }
         set {
             throw new NotImplementedException();
         }
     }
 
-
-
     public virtual void Save(object value) {
-        
+        Debug.Log("Save model: " + value);
+        this.value = value;
+    }
+
+    public override string ToString() {
+        Debug.Log(this.GetType().Name + " props: ");
+        foreach (String p in _properties.Keys) {
+            Debug.Log(p + ": " + _properties[p]);
+        }
+        Debug.Log(this.GetType().Name + " props end. ");
+        return base.ToString();
+    }
+
+
+    public virtual string key {
+        get {
+            return _key;
+        }
+        set {
+            _key = value;
+        }
     }
 }

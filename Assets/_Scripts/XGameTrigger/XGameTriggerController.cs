@@ -13,7 +13,7 @@ public class XGameTriggerController : XGameController {
         trigger.gameEvents = events;
         trigger.gameConditions = conditions;
         trigger.gameActions = actions;
-        trigger.testint = 1;
+        trigger.testint = new XGameUnitModel();
         return trigger;
     }
 
