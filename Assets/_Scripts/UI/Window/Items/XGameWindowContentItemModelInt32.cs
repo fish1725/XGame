@@ -1,14 +1,9 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿namespace Assets._Scripts.UI.Window.Items {
+    public class XGameWindowContentItemModelInt32 : XGameWindowContentItemModel {
 
-public class XGameWindowContentItemModelInt32 : XGameWindowContentItemModel {
-
-    public override void Save(object value) {
-        int result = 0;
-        if (!int.TryParse(value.ToString(), out result)) {
-            this.value = 0;
-        } else {
-            this.value = result;
+        public override void Save(object data) {
+            int result;
+            base.Save(!int.TryParse(data.ToString(), out result) ? 0 : result);
         }
     }
 }

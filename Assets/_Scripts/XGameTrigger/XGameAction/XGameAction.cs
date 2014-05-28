@@ -1,26 +1,49 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Linq.Expressions;
+using Assets._Scripts.XGameTrigger.XGameExpression;
 
-public class XGameAction : XGameMethodCallExpression {
+#endregion
 
-    private Action _resultCompiled = null;
+namespace Assets._Scripts.XGameTrigger.XGameAction {
+    public class XGameAction : XGameMethodCallExpression {
+        #region Fields
 
-    public XGameAction() {
-    }
+        private Action _resultCompiled;
 
-    public XGameAction(XGameExpression instance, string methodName, XGameExpression[] arguments)
-        : base(instance, methodName, arguments) {
-    }
+        #endregion
 
-    public void Execute() {
-        if (_resultCompiled == null) {
-            _resultCompiled = Expression.Lambda<Action>(result).Compile();
+        #region C'tors
+
+        public XGameAction() {
         }
-        _resultCompiled();
-    }
 
-    public static XGameAction CreateAction(XGameExpression instance, string methodName, XGameExpression[] arguments) {
-        return new XGameAction(instance, methodName, arguments);
-    }
+        public XGameAction(XGameExpression.XGameExpression instance, string methodName,
+            XGameExpression.XGameExpression[] arguments)
+            : base(instance, methodName, arguments) {
+        }
 
+        #endregion
+
+        #region Instance Methods
+
+        public void Execute() {
+            if (_resultCompiled == null) {
+                _resultCompiled = Expression.Lambda<Action>(result).Compile();
+            }
+            _resultCompiled();
+        }
+
+        #endregion
+
+        #region Class Methods
+
+        public static XGameAction CreateAction(XGameExpression.XGameExpression instance, string methodName,
+            XGameExpression.XGameExpression[] arguments) {
+            return new XGameAction(instance, methodName, arguments);
+        }
+
+        #endregion
+    }
 }

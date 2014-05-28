@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class XGameWindowContentItemModelString : XGameWindowContentItemModel {
+namespace Assets._Scripts.UI.Window.Items {
+    public class XGameWindowContentItemModelString : XGameWindowContentItemModel {
+        #region Instance Methods
 
-    public override void Save(object value) {
-        this.value = value.ToString();
+        #endregion
     }
-
 }

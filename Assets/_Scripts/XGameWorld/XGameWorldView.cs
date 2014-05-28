@@ -1,33 +1,36 @@
-﻿using ProD;
-using System.Collections.Generic;
+﻿#region
+
+using Assets._Scripts.XGameMap;
+using Assets._Scripts.XGameMVC;
+using Assets._Scripts.XGameUnit;
 using UnityEngine;
 
-public class XGameWorldView : XGameView<XGameWorldModel> {
+#endregion
 
-    public override void InitEvents() {
-        base.InitEvents();
-        Model.On("change:worldMap", InitWorldMap);
-        Model.On("add:characters", AddCharacter);
-    }
+namespace Assets._Scripts.XGameWorld {
+    public class XGameWorldView : XGameView<XGameWorldModel> {
+        #region Instance Methods
 
-    void InitWorldMap(XGameEvent e) {
-        XGameWorldMapModel map = e.data as XGameWorldMapModel;
-        GameObject gameMap = GameObject.Find("XGameMap");
-        if (gameMap == null) {
-            gameMap = new GameObject("XGameMap");
-            gameMap.isStatic = true;
+        public override void InitEvents() {
+            base.InitEvents();
+            Model.On("change:worldMap", InitWorldMap);
+            Model.On("add:characters", AddCharacter);
         }
-        gameMap.transform.parent = transform;
-        XGame.CreateView<XGameWorldMapView, XGameWorldMapModel>(map, gameMap.gameObject);
-    }
 
-    void AddCharacter(XGameEvent e) {
-        XGameCharacterModel c = e.data as XGameCharacterModel;
-        GameObject gameUnits = GameObject.Find("XGameUnits");
-        if (gameUnits == null) {
-            gameUnits = new GameObject("XGameUnits");
+        private void AddCharacter(XGameEvent e) {
+            XGameCharacterModel c = e.data as XGameCharacterModel;
+            GameObject gameUnits = GameObject.Find("XGameUnits") ?? new GameObject("XGameUnits");
+            gameUnits.transform.parent = transform;
+            XGame.CreateView<XGameCharacterView, XGameCharacterModel>(c, gameUnits.gameObject);
         }
-        gameUnits.transform.parent = transform;
-        XGame.CreateView<XGameCharacterView, XGameCharacterModel>(c, gameUnits.gameObject);
+
+        private void InitWorldMap(XGameEvent e) {
+            XGameWorldMapModel map = e.data as XGameWorldMapModel;
+            GameObject gameMap = GameObject.Find("XGameMap") ?? new GameObject("XGameMap") {isStatic = true};
+            gameMap.transform.parent = transform;
+            XGame.CreateView<XGameWorldMapView, XGameWorldMapModel>(map, gameMap.gameObject);
+        }
+
+        #endregion
     }
 }

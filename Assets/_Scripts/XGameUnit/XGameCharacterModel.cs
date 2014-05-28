@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class XGameCharacterModel : XGameUnitModel {
-
-
+﻿namespace Assets._Scripts.XGameUnit {
+    public class XGameCharacterModel : XGameUnitModel {
+    }
 }

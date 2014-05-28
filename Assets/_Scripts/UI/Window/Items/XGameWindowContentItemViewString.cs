@@ -1,18 +1,28 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
 
-public class XGameWindowContentItemViewString : XGameWindowContentItemView {
-    protected UIInput _itemInput;
+using Assets._Scripts.XGameUtil;
+using UnityEngine;
 
-    protected override void InitInput() {
-        GameObject input = XGameUIUtil.CreateInput(gameObject, Model.value.ToString());
-        input.transform.localPosition = new Vector3(_leftX, 0f, 0f);
-        _itemInput = input.GetComponent<UIInput>();
+#endregion
+
+namespace Assets._Scripts.UI.Window.Items {
+    public class XGameWindowContentItemViewString : XGameWindowContentItemView {
+        #region Instance Properties
+
+        public override object value {
+            get { return _itemInput.GetComponent<UIInput>().value; }
+            set { _itemInput.GetComponent<UIInput>().value = value.ToString(); }
+        }
+
+        #endregion
+
+        #region Instance Methods
+
+        protected override void InitInput() {
+            _itemInput = XGameUIUtil.CreateInput(gameObject, Model.value.ToString());
+            _itemInput.transform.localPosition = new Vector3(_leftX, 0f, 0f);
+        }
+
+        #endregion
     }
-
-    public override void Save() {
-        Model.Save(_itemInput.value);
-        //Debug.Log("key: " + Model.key + " value: " + Model.value);
-    }
-
 }

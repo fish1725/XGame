@@ -1,41 +1,51 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
+
 using System;
 using System.Linq.Expressions;
 
-public class XGameConstantExpression : XGameExpression {
+#endregion
 
-    [System.Xml.Serialization.XmlIgnore]
-    public override Expression result {
-        get {
-            return Expression.Constant(value, this.type);
+namespace Assets._Scripts.XGameTrigger.XGameExpression {
+    public class XGameConstantExpression : XGameExpression {
+        #region Fields
+
+        private object _value;
+
+        #endregion
+
+        #region C'tors
+
+        public XGameConstantExpression() {
+            value = null;
         }
-    }
 
-    private object _value;
-    public object value {
-        get {
-            return this._value;
+        public XGameConstantExpression(object value)
+            : base(XGameExpressionType.Constant, (value != null) ? value.GetType() : typeof (object)) {
+            this.value = value;
         }
-        set {
-            this._value = value;
-            this.type = (value != null) ? value.GetType() : typeof(object);
+
+        public XGameConstantExpression(object value, Type type)
+            : base(XGameExpressionType.Constant, type) {
+            this.value = value;
         }
-    }
 
-    public XGameConstantExpression()
-        : base() {
-        this.value = null;
-    }
+        #endregion
 
-    public XGameConstantExpression(object value)
-        : base(XGameExpressionType.Constant, (value != null) ? value.GetType() : typeof(object)) {
-        this.value = value;
-    }
+        #region Instance Properties
 
-    public XGameConstantExpression(object value, Type type)
-        : base(XGameExpressionType.Constant, type) {
-        this.value = value;
-    }
+        [System.Xml.Serialization.XmlIgnore]
+        public override Expression result {
+            get { return Expression.Constant(value, type); }
+        }
 
+        public object value {
+            get { return _value; }
+            set {
+                _value = value;
+                type = (value != null) ? value.GetType() : typeof (object);
+            }
+        }
+
+        #endregion
+    }
 }

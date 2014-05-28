@@ -1,25 +1,25 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class XGameWindowMinButton : MonoBehaviour {
+namespace Assets._Scripts.UI.Window {
+    public class XGameWindowMinButton : MonoBehaviour {
 
-    public XGameWindowView target;
+        public XGameWindowView target;
 
-    void OnClick() {
-        if (!target) {
-            Transform temp = transform;
-            while (temp) {
-                XGameWindowView gw = temp.GetComponent<XGameWindowView>();
-                if (gw) {
-                    target = gw;
-                    break;
+        protected void OnClick() {
+            if (!target) {
+                Transform temp = transform;
+                while (temp) {
+                    XGameWindowView gw = temp.GetComponent<XGameWindowView>();
+                    if (gw) {
+                        target = gw;
+                        break;
+                    }
+                    temp = temp.parent;
                 }
-                temp = temp.parent;
             }
-        }
-        if (target) {
+            if (!target) return;
             target.Maximum(false);
-            target.Minimum(!target.IsMin);
-        }            
+            target.Minimum(!target.isMin);
+        }
     }
 }

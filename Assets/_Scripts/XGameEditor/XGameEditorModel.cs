@@ -1,33 +1,46 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
+
 using System.Collections.Generic;
+using Assets._Scripts.UI.Window;
+using Assets._Scripts.XGameMVC;
+using Assets._Scripts.XGameTrigger;
 
-public class XGameEditorModel : XGameModel {
+#endregion
 
-    public List<XGameTrigger> triggers {
-        get { return Get("triggers") as List<XGameTrigger>; }
-        set { Set("triggers", value); }
+namespace Assets._Scripts.XGameEditor {
+    public class XGameEditorModel : XGameModel {
+        #region Instance Properties
+
+        public List<XGameTriggerModel> triggers {
+            get { return Get("triggers") as List<XGameTriggerModel>; }
+            set { Set("triggers", value); }
+        }
+
+        public List<XGameWindowModel> windows {
+            get { return Get("windows") as List<XGameWindowModel>; }
+            set { Set("windows", value); }
+        }
+
+        #endregion
+
+        #region Instance Methods
+
+        public void AddTrigger(XGameTriggerModel trigger) {
+            Add("triggers", trigger);
+        }
+
+        public void AddWindow(XGameWindowModel window) {
+            Add("windows", window);
+        }
+
+        public void RemoveTrigger(XGameTriggerModel trigger) {
+            Remove("triggers", trigger);
+        }
+
+        public void RemoveWindow(XGameWindowModel window) {
+            Remove("windows", window);
+        }
+
+        #endregion
     }
-
-    public void AddTrigger(XGameTrigger trigger) {
-        Add<XGameTrigger>("triggers", trigger);
-    }
-
-    public void RemoveTrigger(XGameTrigger trigger) {
-        Remove<XGameTrigger>("triggers", trigger);
-    }
-
-    public List<XGameWindowModel> windows {
-        get { return Get("windows") as List<XGameWindowModel>; }
-        set { Set("windows", value); }
-    }
-
-    public void AddWindow(XGameWindowModel window) {
-        Add<XGameWindowModel>("windows", window);
-    }
-
-    public void RemoveWindow(XGameWindowModel window) {
-        Remove<XGameWindowModel>("windows", window);
-    }
-
 }

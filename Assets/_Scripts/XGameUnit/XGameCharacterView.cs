@@ -1,43 +1,57 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
 
-public class XGameCharacterView : XGameUnitView<XGameCharacterModel> {
-    private GameObject _shadow;
+using UnityEngine;
 
-    void Start() {
-        XGameWorldEventDispatcher.instance.broadcast(XGameEventType.Character_Created);
-    }
+#endregion
 
-    void Update() {
+namespace Assets._Scripts.XGameUnit {
+    public class XGameCharacterView : XGameUnitView<XGameCharacterModel> {
+        #region Fields
 
-    }
+        private GameObject _shadow;
 
-    public override void Init() {
-        InitModel();
-        InitShadow();
-        InitLayer();
-    }
+        #endregion
 
-    public override void InitEvents() {
-    }
+        #region Instance Methods
 
-    void InitModel() {
-        GameObject character = GameObject.Instantiate(Resources.Load<GameObject>("King")) as GameObject;
-        character.transform.parent = transform;
-        transform.position = Model.position;
-        gameObject.tag = "Player";
-    }
-
-    void InitShadow() {
-        _shadow = GameObject.Instantiate(Resources.Load<GameObject>("Blob Shadow Projector")) as GameObject;
-        _shadow.transform.parent = transform;
-        _shadow.transform.localPosition = new Vector3(0, 1.5f, 0);
-        _shadow.GetComponent<Projector>().ignoreLayers |= 1 << LayerMask.NameToLayer("Unit");
-    }
-
-    void InitLayer() {
-        foreach (Transform child in GetComponentsInChildren<Transform>()) {
-            child.gameObject.layer = LayerMask.NameToLayer("Unit");
+        public override void Init() {
+            InitModel();
+            InitShadow();
+            InitLayer();
         }
+
+        public override void InitEvents() {
+        }
+
+        private void InitLayer() {
+            foreach (Transform child in GetComponentsInChildren<Transform>()) {
+                child.gameObject.layer = LayerMask.NameToLayer("Unit");
+            }
+        }
+
+        private void InitModel() {
+            GameObject character = Instantiate(Resources.Load<GameObject>("King")) as GameObject;
+            if (character != null) character.transform.parent = transform;
+            transform.position = Model.position;
+            gameObject.tag = "Player";
+        }
+
+        private void InitShadow() {
+            _shadow = Instantiate(Resources.Load<GameObject>("Blob Shadow Projector")) as GameObject;
+            if (_shadow != null) {
+                _shadow.transform.parent = transform;
+                _shadow.transform.localPosition = new Vector3(0, 1.5f, 0);
+                _shadow.GetComponent<Projector>().ignoreLayers |= 1 << LayerMask.NameToLayer("Unit");
+            }
+        }
+
+        protected void Start() {
+            XGameWorldEventDispatcher.instance.broadcast(XGameEventType.Character_Created);
+        }
+
+        protected void Update() {
+        }
+
+        #endregion
     }
 }

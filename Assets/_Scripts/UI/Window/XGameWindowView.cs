@@ -1,178 +1,76 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿#region
+
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using Assets._Scripts.UI.Window.Items;
+using Assets._Scripts.XGameMVC;
+using Assets._Scripts.XGameUtil;
+using UnityEngine;
 
-public class XGameWindowView : XGameView<XGameWindowModel> {
+#endregion
 
-    private bool _isMax = false;
-    private bool _isMin = false;
-    private int _lastWidth = 600;
-    private int _lastHeight = 480;
-    private float _lastX = 0;
-    private float _lastY = 0;
-    private GameObject _contentWrapper;
-    private GameObject _title;
+namespace Assets._Scripts.UI.Window {
+    public class XGameWindowView : XGameView<XGameWindowModel> {
+        #region Readonly & Static Fields
 
-    private List<XGameWindowContentItemView> _items = new List<XGameWindowContentItemView>();
+        private readonly List<XGameWindowContentItemView> _items = new List<XGameWindowContentItemView>();
 
-    public bool IsMax {
-        get { return _isMax; }
-        set { _isMax = value; }
-    }
-    public bool IsMin {
-        get { return _isMin; }
-        set { _isMin = value; }
-    }
+        #endregion
 
-    public override void Init() {
-        InitPanel();
-        InitContentWrapper();
-        InitTitle();
-        InitButtons();
-        InitResizer();
-        InitListContent();
-    }
+        #region Fields
 
-    public override void InitEvents() {
-        base.InitEvents();
-        Model.On("add:content", OnAddWindowContent);
-        Model.On("remove:content", OnRemoveWindowContent);
-        Model.On("change:active", OnChangeActive);
-    }
+        private GameObject _contentWrapper;
+        private int _lastHeight = 480;
+        private int _lastWidth = 600;
+        private float _lastX;
+        private float _lastY;
+        private GameObject _title;
 
-    void OnAddWindowContent(XGameEvent e) {
-        UITable table = GetComponentInChildren<UITable>();
-        if (table) {
-            IXGameWindowContentItemModel item = e.data as IXGameWindowContentItemModel;
-            Type gameType = typeof(XGame);
-            Type viewType = Type.GetType("XGameWindowContentItemView" + item.value.GetType().Name);
-            if (viewType == null) {
-                viewType = Type.GetType("XGameWindowContentItemView");
-            }
-            MethodInfo methodDefine = gameType.GetMethod("CreateView", BindingFlags.Public | BindingFlags.Static);
-            Type[] genericTypes = { viewType, typeof(IXGameWindowContentItemModel) };
-            MethodInfo constructed = methodDefine.MakeGenericMethod(genericTypes);
-            object[] args = { item, table.gameObject };
-            object view = constructed.Invoke(null, args);
+        #endregion
 
-            _items.Add(view as XGameWindowContentItemView);
-            table.repositionNow = true;
-            table.StartCoroutine(XGameObjectUtil.WaitAndDo(1, () => { GetComponentInChildren<UIScrollView>().ResetPosition(); }));
+        #region Instance Properties
+
+        public bool isMax { get; set; }
+
+        public bool isMin { get; set; }
+
+        #endregion
+
+        #region Instance Methods
+
+        public override void Init() {
+            InitPanel();
+            InitContentWrapper();
+            InitTitle();
+            InitButtons();
+            InitResizer();
+            InitListContent();
         }
-    }
 
-    void OnRemoveWindowContent(XGameEvent e) {
-        UITable table = GetComponentInChildren<UITable>();
-        if (table) {
-            IXGameWindowContentItemModel item = e.data as IXGameWindowContentItemModel;
-            XGameWindowContentItemView viewToRemove = null;
-            foreach (XGameWindowContentItemView view in _items) {
-                if (view.Model == item)
-                    viewToRemove = view;
-            }
-            if (viewToRemove != null)
-                XGame.RemoveView<XGameWindowContentItemView, IXGameWindowContentItemModel>(viewToRemove);
-            table.repositionNow = true;
-            table.StartCoroutine(XGameObjectUtil.WaitAndDo(1, () => { GetComponentInChildren<UIScrollView>().ResetPosition(); }));
+        public override void InitEvents() {
+            base.InitEvents();
+            Model.On("add:content", OnAddWindowContent);
+            Model.On("remove:content", OnRemoveWindowContent);
+            Model.On("change:active", OnChangeActive);
         }
-    }
 
-    void OnChangeActive(XGameEvent e) {
-        bool active = (bool)e.data;
-        gameObject.SetActive(active);
-        if (active) {
+        public void BringForward() {
             NGUITools.BringForward(gameObject);
         }
-    }
 
-    void InitPanel() {
-        UIWidget widget = gameObject.AddComponent<UIWidget>();
-        widget.width = _lastWidth;
-        widget.height = _lastHeight;
-        gameObject.AddComponent<UIPanel>();
-        gameObject.layer = LayerMask.NameToLayer("UI");
-    }
+        public void Close() {
+            Save();
+            XGame.Resolve<XGameWindowController>().SetWindowActive(Model, false);
+        }
 
-    void InitTitle() {
-        UISprite sprite = NGUITools.AddSprite(gameObject, XGameEditor.Resolve<UIAtlas>(), "TitleBG");
-        sprite.SetAnchor(gameObject, 0, -100, 0, 0);
-        sprite.bottomAnchor.relative = 1;
-        UIDragObject udo = sprite.gameObject.AddComponent<UIDragObject>();
-        udo.target = transform;
-        udo.restrictWithinPanel = true;
-        udo.contentRect = sprite;
-        NGUITools.AddWidgetCollider(sprite.gameObject);
-        sprite.gameObject.AddComponent<XGameWindowTitle>();
-        _title = sprite.gameObject;
-    }
-
-    void InitButtons() {
-        InitCloseButton();
-        InitMaxButton();
-        InitMinButton();
-    }
-
-    void InitCloseButton() {
-        GameObject imageButton = XGameUIUtil.CreateImageButton(_title, "Buttons_Cancel");
-        UISprite sprite = imageButton.GetComponent<UISprite>();
-        sprite.SetAnchor(_title, -90, 10, -10, -10);
-        sprite.leftAnchor.relative = 1;
-        imageButton.AddComponent<XGameWindowCloseButton>();
-    }
-
-    void InitMaxButton() {
-        GameObject imageButton = XGameUIUtil.CreateImageButton(_title, "Buttons_LevelSelect");
-        UISprite sprite = imageButton.GetComponent<UISprite>();
-        sprite.SetAnchor(_title, -170, 10, -90, -10);
-        sprite.leftAnchor.relative = 1;
-        sprite.gameObject.AddComponent<XGameWindowMaxButton>();
-    }
-
-    void InitMinButton() {
-        GameObject imageButton = XGameUIUtil.CreateImageButton(_title, "Buttons_Decrease");
-        UISprite sprite = imageButton.GetComponent<UISprite>();
-        sprite.SetAnchor(_title, -250, 10, -170, -10);
-        sprite.leftAnchor.relative = 1;
-        sprite.gameObject.AddComponent<XGameWindowMinButton>();
-    }
-
-    void InitContentWrapper() {
-        UISprite sprite = NGUITools.AddSprite(gameObject, XGameEditor.Resolve<UIAtlas>(), "WindowBG");
-        sprite.SetAnchor(gameObject);
-        _contentWrapper = sprite.gameObject;
-        _contentWrapper.name = "ContentWrapper";
-    }
-
-    void InitResizer() {
-        UIWidget resizer = NGUITools.AddWidget<UIWidget>(_contentWrapper);
-        resizer.SetAnchor(gameObject, -80, 0, 0, 80);
-        resizer.leftAnchor.relative = 1;
-        resizer.topAnchor.relative = 0;
-        NGUITools.AddWidgetCollider(resizer.gameObject);
-        UIDragResize dr = resizer.gameObject.AddComponent<UIDragResize>();
-        dr.target = GetComponent<UIWidget>();
-        dr.pivot = UIWidget.Pivot.BottomRight;
-        dr.minHeight = 480;
-        dr.minWidth = 600;
-    }
-
-    void InitListContent() {
-        GameObject sv = XGameUIUtil.CreateScrollViewContent(_contentWrapper);
-        sv.GetComponentInChildren<UIPanel>().depth = gameObject.GetComponent<UIPanel>().depth + 1;
-    }
-
-    public void Close() {
-        Save();
-        XGame.Resolve<XGameWindowController>().SetWindowActive(Model, false);
-    }
-
-    public void Maximum(bool max, bool rePosition = true) {
-        if (_isMax != max) {
-            _isMax = max;
-            UIWidget widget = GetComponent<UIWidget>();
-            if (!_isMax) {
+        public void Maximum(bool max, bool rePosition = true) {
+            Save();
+            if (isMax == max) return;
+            isMax = max;
+            var widget = GetComponent<UIWidget>();
+            if (!isMax) {
                 widget.SetAnchor(null, 0, 0, 0, 0);
                 widget.width = _lastWidth;
                 widget.height = _lastHeight;
@@ -192,24 +90,142 @@ public class XGameWindowView : XGameView<XGameWindowModel> {
                 GetComponentInChildren<UIDragResize>().collider.enabled = false;
             }
         }
-    }
 
-    public void Minimum(bool min) {
-        if (_isMin != min) {
-            _isMin = min;
+        public void Minimum(bool min) {
+            if (isMin == min) return;
+            isMin = min;
             if (_contentWrapper == null)
                 _contentWrapper = transform.Find("ContentWrapper").gameObject;
-            _contentWrapper.GetComponent<UIWidget>().alpha = _isMin ? 0 : 1;
+            _contentWrapper.GetComponent<UIWidget>().alpha = isMin ? 0 : 1;
         }
-    }
 
-    public void BringForward() {
-        NGUITools.BringForward(gameObject);
-    }
-
-    public void Save() {
-        foreach (XGameWindowContentItemView view in _items) {
-            view.Save();
+        public void Save() {
+            foreach (XGameWindowContentItemView view in _items) {
+                view.Save();
+            }
         }
+
+        private void InitButtons() {
+            InitCloseButton();
+            InitMaxButton();
+            InitMinButton();
+        }
+
+        private void InitCloseButton() {
+            GameObject imageButton = XGameUIUtil.CreateImageButton(_title, "Buttons_Cancel");
+            var sprite = imageButton.GetComponent<UISprite>();
+            sprite.SetAnchor(_title, -90, 10, -10, -10);
+            sprite.leftAnchor.relative = 1;
+            imageButton.AddComponent<XGameWindowCloseButton>();
+        }
+
+        private void InitContentWrapper() {
+            UISprite sprite = NGUITools.AddSprite(gameObject, XGame.Resolve<UIAtlas>(), "WindowBG");
+            sprite.SetAnchor(gameObject);
+            _contentWrapper = sprite.gameObject;
+            _contentWrapper.name = "ContentWrapper";
+        }
+
+        private void InitListContent() {
+            GameObject sv = XGameUIUtil.CreateScrollViewContent(_contentWrapper);
+            sv.GetComponentInChildren<UIPanel>().depth = gameObject.GetComponent<UIPanel>().depth + 1;
+        }
+
+        private void InitMaxButton() {
+            GameObject imageButton = XGameUIUtil.CreateImageButton(_title, "Buttons_LevelSelect");
+            var sprite = imageButton.GetComponent<UISprite>();
+            sprite.SetAnchor(_title, -170, 10, -90, -10);
+            sprite.leftAnchor.relative = 1;
+            sprite.gameObject.AddComponent<XGameWindowMaxButton>();
+        }
+
+        private void InitMinButton() {
+            GameObject imageButton = XGameUIUtil.CreateImageButton(_title, "Buttons_Decrease");
+            var sprite = imageButton.GetComponent<UISprite>();
+            sprite.SetAnchor(_title, -250, 10, -170, -10);
+            sprite.leftAnchor.relative = 1;
+            sprite.gameObject.AddComponent<XGameWindowMinButton>();
+        }
+
+        private void InitPanel() {
+            var widget = gameObject.AddComponent<UIWidget>();
+            widget.width = _lastWidth;
+            widget.height = _lastHeight;
+            gameObject.AddComponent<UIPanel>();
+            gameObject.layer = LayerMask.NameToLayer("UI");
+        }
+
+        private void InitResizer() {
+            var resizer = NGUITools.AddWidget<UIWidget>(_contentWrapper);
+            resizer.SetAnchor(gameObject, -80, 0, 0, 80);
+            resizer.leftAnchor.relative = 1;
+            resizer.topAnchor.relative = 0;
+            NGUITools.AddWidgetCollider(resizer.gameObject);
+            var dr = resizer.gameObject.AddComponent<UIDragResize>();
+            dr.target = GetComponent<UIWidget>();
+            dr.pivot = UIWidget.Pivot.BottomRight;
+            dr.minHeight = 480;
+            dr.minWidth = 600;
+        }
+
+        private void InitTitle() {
+            UISprite sprite = NGUITools.AddSprite(gameObject, XGame.Resolve<UIAtlas>(), "TitleBG");
+            sprite.SetAnchor(gameObject, 0, -100, 0, 0);
+            sprite.bottomAnchor.relative = 1;
+            var udo = sprite.gameObject.AddComponent<UIDragObject>();
+            udo.target = transform;
+            udo.restrictWithinPanel = true;
+            udo.contentRect = sprite;
+            NGUITools.AddWidgetCollider(sprite.gameObject);
+            sprite.gameObject.AddComponent<XGameWindowTitle>();
+            _title = sprite.gameObject;
+        }
+
+        private void OnAddWindowContent(XGameEvent e) {
+            var table = GetComponentInChildren<UITable>();
+            if (!table) return;
+            var item = e.data as IXGameWindowContentItemModel;
+            Type gameType = typeof(XGame);
+            if (item != null) {
+                Type viewBaseType = typeof(XGameWindowContentItemView);
+                Type viewType = Type.GetType(viewBaseType.Namespace + ".XGameWindowContentItemView" + item.value.GetType().Name) ??
+                                viewBaseType;
+                MethodInfo methodDefine = gameType.GetMethod("CreateView", BindingFlags.Public | BindingFlags.Static);
+                Type[] genericTypes = { viewType, typeof(IXGameWindowContentItemModel) };
+                MethodInfo constructed = methodDefine.MakeGenericMethod(genericTypes);
+                object[] args = { item, table.gameObject };
+                object view = constructed.Invoke(null, args);
+
+                _items.Add(view as XGameWindowContentItemView);
+            }
+            table.repositionNow = true;
+            table.StartCoroutine(XGameObjectUtil.WaitAndDo(1,
+                () => GetComponentInChildren<UIScrollView>().ResetPosition()));
+        }
+
+        private void OnChangeActive(XGameEvent e) {
+            var data = (bool)e.data;
+            gameObject.SetActive(data);
+            if (data) {
+                NGUITools.BringForward(gameObject);
+            }
+        }
+
+        private void OnRemoveWindowContent(XGameEvent e) {
+            var table = GetComponentInChildren<UITable>();
+            if (!table) return;
+            var item = e.data as IXGameWindowContentItemModel;
+            XGameWindowContentItemView viewToRemove = null;
+            foreach (XGameWindowContentItemView view in _items.Where(view => view.Model == item)) {
+                viewToRemove = view;
+            }
+            if (viewToRemove != null)
+                XGame.RemoveView<XGameWindowContentItemView, IXGameWindowContentItemModel>(viewToRemove);
+            table.repositionNow = true;
+            table.StartCoroutine(XGameObjectUtil.WaitAndDo(1,
+                () => GetComponentInChildren<UIScrollView>().ResetPosition()));
+        }
+
+        #endregion
     }
 }

@@ -1,56 +1,71 @@
-﻿using UnityEngine;
+﻿#region
+
 using System.Collections;
+using UnityEngine;
 
-public class XGame : MonoBehaviour {
+#endregion
 
-    private static Hashtable _instances = new Hashtable();
+namespace Assets._Scripts.XGameMVC {
+    public class XGame : MonoBehaviour {
+        #region Readonly & Static Fields
 
-    public static T CreateView<T, TT>(TT model, GameObject parent = null)
-        where T : XGameView<TT>
-        where TT : IXGameModel {
-        GameObject go = new GameObject();
-        go.name = typeof(T).ToString();
-        if (parent != null) {
-            go.transform.parent = parent.transform;
-            go.layer = parent.layer;
+        private static readonly Hashtable _instances = new Hashtable();
+
+        #endregion
+
+        #region Instance Methods
+
+        public virtual void Setup() {
         }
-        go.transform.localScale = Vector3.one;
-        T view = go.AddComponent<T>();
-        view.Model = model;
-        view.InitEvents();
-        view.Init();
-        return view;
-    }
 
-    public static void RemoveView<T, TT>(T view)
-        where T : XGameView<TT>
-        where TT : IXGameModel {
-        GameObject go = view.gameObject;
-        view.dispose();
-        GameObject.Destroy(go);
-    }
+        protected void Start() {
+            Setup();
+        }
 
-    public static T CreateController<T>() where T : XGameController, new() {
-        T controller = new T();
-        RegisterInstance<T>(controller);
-        return controller;
-    }
+        #endregion
 
-    public static T RegisterInstance<T>(T instance) {
-        string name = typeof(T).ToString();
-        _instances[name] = instance;
-        return instance;
-    }
+        #region Class Methods
 
-    public static T Resolve<T>() {
-        return (T)(_instances[typeof(T).ToString()]);
-    }
+        public static T CreateController<T>() where T : XGameController, new() {
+            T controller = new T();
+            RegisterInstance(controller);
+            return controller;
+        }
 
-    virtual public void Setup() {
+        public static T CreateView<T, TT>(TT model, GameObject parent = null)
+            where T : XGameView<TT>
+            where TT : IXGameModel {
+            GameObject go = new GameObject {name = typeof (T).Name};
+            if (parent != null) {
+                go.transform.parent = parent.transform;
+                go.layer = parent.layer;
+            }
+            go.transform.localScale = Vector3.one;
+            T view = go.AddComponent<T>();
+            view.Model = model;
+            view.InitEvents();
+            view.Init();
+            return view;
+        }
 
-    }
+        public static T RegisterInstance<T>(T instance) {
+            string name = typeof (T).ToString();
+            _instances[name] = instance;
+            return instance;
+        }
 
-    void Start() {
-        Setup();
+        public static void RemoveView<T, TT>(T view)
+            where T : XGameView<TT>
+            where TT : IXGameModel {
+            GameObject go = view.gameObject;
+            view.dispose();
+            Destroy(go);
+        }
+
+        public static T Resolve<T>() {
+            return (T) (_instances[typeof (T).ToString()]);
+        }
+
+        #endregion
     }
 }

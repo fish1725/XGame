@@ -1,39 +1,38 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Assets._Scripts.XGameUtil;
+using UnityEngine;
 
-public class XGameWindowTitle : MonoBehaviour {
+namespace Assets._Scripts.UI.Window {
+    public class XGameWindowTitle : MonoBehaviour {
+        public XGameWindowView target;
 
-    public XGameWindowView target;
-
-    void OnDragStart() {
-        if (!target) {
-            target = XGameObjectUtil.GetComponentInAncestors<XGameWindowView>(gameObject);
+        protected void OnDragStart() {
+            if (!target) {
+                target = XGameObjectUtil.GetComponentInAncestors<XGameWindowView>(gameObject);
+            }
+            if (target) {
+                target.Maximum(false);
+            }
         }
-        if (target) {
-            target.Maximum(false);
-        }
 
-    }
-
-    void OnDoubleClick() {
-        if (!target) {
-            target = XGameObjectUtil.GetComponentInAncestors<XGameWindowView>(gameObject);
-        }
-        if (target) {
-            target.Maximum(!target.IsMax);
+        protected void OnDoubleClick() {
+            if (!target) {
+                target = XGameObjectUtil.GetComponentInAncestors<XGameWindowView>(gameObject);
+            }
+            if (!target) return;
+            target.Maximum(!target.isMax);
             target.Minimum(false);
-            SpringPosition sp = target.GetComponent<SpringPosition>();
+            var sp = target.GetComponent<SpringPosition>();
             if (sp)
                 sp.enabled = false;
         }
-    }
 
-    void OnPress() {
-        if (!target) {
-            target = XGameObjectUtil.GetComponentInAncestors<XGameWindowView>(gameObject);
-        }
-        if (target) {
-            target.BringForward();
+        protected void OnPress() {
+            if (!target) {
+                target = XGameObjectUtil.GetComponentInAncestors<XGameWindowView>(gameObject);
+            }
+            if (target) {
+                target.BringForward();
+            }
         }
     }
 }

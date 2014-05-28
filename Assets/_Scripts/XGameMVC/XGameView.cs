@@ -1,23 +1,28 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
 
-public class XGameView<T> : MonoBehaviour where T : IXGameModel {
-    private T _model;
+using UnityEngine;
 
-    public T Model {
-        get { return _model; }
-        set { _model = value; }
-    }
+#endregion
 
-    public virtual void InitEvents() {
+namespace Assets._Scripts.XGameMVC {
+    public class XGameView<T> : MonoBehaviour where T : IXGameModel {
+        #region Instance Properties
 
-    }
+        public T Model { get; set; }
 
-    public virtual void Init() {
+        #endregion
 
-    }
+        #region Instance Methods
 
-    public virtual void dispose() {
+        public virtual void Init() {
+        }
 
+        public virtual void InitEvents() {
+        }
+
+        public virtual void dispose() {
+        }
+
+        #endregion
     }
 }

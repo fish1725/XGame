@@ -1,16 +1,23 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
+
+using Assets._Scripts.XGameMVC;
 using ProD;
 
-public class XGameWorldMapController : XGameController {
+#endregion
 
-    public XGameWorldMapModel CreateWorldMap() {
-        XGameWorldMapModel map = new XGameWorldMapModel();
-        return map;
+namespace Assets._Scripts.XGameMap {
+    public class XGameWorldMapController : XGameController {
+        #region Instance Methods
+
+        public XGameWorldMapModel CreateWorldMap() {
+            XGameWorldMapModel map = new XGameWorldMapModel();
+            return map;
+        }
+
+        public void InitMap(XGameWorldMapModel worldMap) {
+            worldMap.map = Generator_Dungeon.Generate();
+        }
+
+        #endregion
     }
-
-    public void InitMap(XGameWorldMapModel worldMap) {
-        worldMap.map = Generator_Dungeon.Generate();
-    }
-
 }

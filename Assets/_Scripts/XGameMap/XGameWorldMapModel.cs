@@ -1,53 +1,58 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
+
+using Assets._Scripts.XGameMVC;
 using ProD;
-public class XGameWorldMapModel : XGameModel {
-    private XGameMap[,] _maps;
 
-    public XGameMap[,] maps {
-        get {
-            return _maps;
+#endregion
+
+namespace Assets._Scripts.XGameMap {
+    public class XGameWorldMapModel : XGameModel {
+        #region Fields
+
+        #endregion
+
+        #region C'tors
+
+        #endregion
+
+        #region Instance Properties
+
+        public Map map {
+            get { return Get("map") as Map; }
+            set { Set("map", value); }
         }
-        set {
-            _maps = value;
-        }
-    }
 
-    private XGameWorldMapProperties _prop;
+        public XGameMap[,] maps { get; set; }
 
-    public XGameWorldMapProperties prop {
-        get {
-            return _prop;
-        }
-        set {
-            _prop = value;
-        }
-    }
+        public XGameWorldMapProperties prop { get; set; }
 
-    public Map map {
-        get { return Get("map") as Map; }
-        set { Set("map", value); }
-    }
+        #endregion
 
-    public XGameWorldMapModel() {
+        #region Class Methods
 
-    }
-
-    public static XGameWorldMapModel generate(XGameWorldMapProperties prop) {
-        XGameWorldMapModel worldMap = new XGameWorldMapModel();
-        worldMap.prop = prop;
-        worldMap.maps = new XGameMap[prop.sizeX, prop.sizeZ];
-        for (int i = 0; i < prop.sizeX; i++) {
-            for (int j = 0; j < prop.sizeZ; j++) {
-                XGameMap map = new XGameMap();
-                worldMap.maps[i, j] = map;
+        public static XGameWorldMapModel generate(XGameWorldMapProperties prop) {
+            XGameWorldMapModel worldMap = new XGameWorldMapModel {
+                prop = prop,
+                maps = new XGameMap[prop.sizeX, prop.sizeZ]
+            };
+            for (int i = 0; i < prop.sizeX; i++) {
+                for (int j = 0; j < prop.sizeZ; j++) {
+                    XGameMap map = new XGameMap();
+                    worldMap.maps[i, j] = map;
+                }
             }
+            return worldMap;
         }
-        return worldMap;
-    }
-}
 
-public class XGameWorldMapProperties {
-    public int sizeX;
-    public int sizeZ;
+        #endregion
+    }
+
+    public class XGameWorldMapProperties {
+        #region Fields
+
+        public int sizeX;
+        public int sizeZ;
+
+        #endregion
+    }
 }

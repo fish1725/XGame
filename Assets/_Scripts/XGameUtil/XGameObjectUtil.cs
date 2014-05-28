@@ -1,29 +1,37 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
+
 using System;
+using System.Collections;
+using UnityEngine;
 
-public class XGameObjectUtil {
+#endregion
 
-    public static T GetComponentInAncestors<T>(GameObject go) where T : Component {
-        Transform temp = go.transform;
-        T result;
-        while (temp) {
-            result = temp.GetComponent<T>();
-            if (result) {
-                return result;
+namespace Assets._Scripts.XGameUtil {
+    public class XGameObjectUtil {
+        #region Class Methods
+
+        public static T GetComponentInAncestors<T>(GameObject go) where T : Component {
+            Transform temp = go.transform;
+            while (temp) {
+                T result = temp.GetComponent<T>();
+                if (result) {
+                    return result;
+                }
+                temp = temp.parent;
             }
-            temp = temp.parent;
+            return null;
         }
-        return null;
-    }
 
-    public static IEnumerator WaitAndDo(int ret, Action act) {
-        yield return ret;
-        act();
-    }
+        public static IEnumerator WaitAndDo(int ret, Action act) {
+            yield return ret;
+            act();
+        }
 
-    public static IEnumerator WaitAndDo(YieldInstruction ret, Action act) {
-        yield return ret;
-        act();
+        public static IEnumerator WaitAndDo(YieldInstruction ret, Action act) {
+            yield return ret;
+            act();
+        }
+
+        #endregion
     }
 }

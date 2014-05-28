@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿namespace Assets._Scripts.UI.Window.Items {
+    public class XGameWindowContentItemViewInt32 : XGameWindowContentItemViewString {
 
-public class XGameWindowContentItemViewInt32 : XGameWindowContentItemViewString {
-
+    }
 }

@@ -1,15 +1,26 @@
-﻿using System;
+﻿#region
 
-public interface IXGameModel {
-    void Set(string property, object value);
+using System;
 
-    object Get(string property);
+#endregion
 
-    void On(string eventName, XGameEventHandler func);
+namespace Assets._Scripts.XGameMVC {
+    public interface IXGameModel {
+        #region Instance Properties
 
-    void Off(string eventName, XGameEventHandler func);
+        Guid id { get; set; }
 
-    Guid id { get; set; }
+        string name { get; set; }
 
-    string name { get; set; }
+        #endregion
+
+        #region Instance Methods
+
+        object Get(string property);
+        void Off(string eventName, XGameEventHandler func);
+        void On(string eventName, XGameEventHandler func);
+        void Set(string property, object data);
+
+        #endregion
+    }
 }

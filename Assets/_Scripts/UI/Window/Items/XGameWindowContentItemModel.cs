@@ -1,46 +1,27 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Assets._Scripts.XGameMVC;
 
-public class XGameWindowContentItemModel : XGameModel, IXGameWindowContentItemModel {
-
-    private string _key;
-    private object _value;
-
-
-    public override string spriteName {
-        get {
-            return "";
+namespace Assets._Scripts.UI.Window.Items {
+    public class XGameWindowContentItemModel : XGameModel, IXGameWindowContentItemModel {
+        public override string spriteName {
+            get {
+                return "";
+            }
+            set {
+                base.spriteName = value;
+            }
         }
-        set {
-            base.spriteName = value;
+
+        public override System.Collections.Generic.List<IXGameWindowContentItemModel> windowContentItems {
+            get {
+                return null;
+            }
+            set {
+
+            }
         }
+
+        public override object value { get; set; }
+
+        public override string key { get; set; }
     }
-
-    public override System.Collections.Generic.List<IXGameWindowContentItemModel> windowContentItems {
-        get {
-            return null;
-        }
-        set {
-
-        }
-    }
-
-    public override object value {
-        get {
-            return _value;
-        }
-        set {
-            _value = value;
-        }
-    }
-
-    public override string key {
-        get {
-            return _key;
-        }
-        set {
-            _key = value;
-        }
-    }
-
 }

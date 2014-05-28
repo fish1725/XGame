@@ -1,37 +1,49 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
+
 using System.Collections.Generic;
+using Assets._Scripts.UI.Window.Items;
+using Assets._Scripts.XGameMVC;
 
-public class XGameWindowModel : XGameModel {
+#endregion
 
-    public List<IXGameWindowContentItemModel> content {
-        get { return Get("content") as List<IXGameWindowContentItemModel>; }
-        set { Set("content", value); }
-    }
+namespace Assets._Scripts.UI.Window {
+    public class XGameWindowModel : XGameModel {
+        #region Instance Properties
 
-    public void AddContent(IXGameWindowContentItemModel item) {
-        Add<IXGameWindowContentItemModel>("content", item);
-    }
+        public bool active {
+            get { return (bool) Get("active"); }
+            set { Set("active", value); }
+        }
 
-    public void RemoveContent(IXGameWindowContentItemModel item) {
-        Remove<IXGameWindowContentItemModel>("content", item);
-    }
+        public List<IXGameWindowContentItemModel> content {
+            get { return Get("content") as List<IXGameWindowContentItemModel>; }
+            set { Set("content", value); }
+        }
 
-    public void RemoveAllContent() {
-        if (content != null) {
-            List<IXGameWindowContentItemModel> itemsToRemove = new List<IXGameWindowContentItemModel>();
-            for (int i = 0, length = content.Count; i < length; i++) {
-                itemsToRemove.Add(content[i]);
-            }
-            foreach (IXGameWindowContentItemModel item in itemsToRemove) {
-                Remove<IXGameWindowContentItemModel>("content", item);
+        #endregion
+
+        #region Instance Methods
+
+        public void AddContent(IXGameWindowContentItemModel item) {
+            Add("content", item);
+        }
+
+        public void RemoveAllContent() {
+            if (content != null) {
+                List<IXGameWindowContentItemModel> itemsToRemove = new List<IXGameWindowContentItemModel>();
+                for (int i = 0, length = content.Count; i < length; i++) {
+                    itemsToRemove.Add(content[i]);
+                }
+                foreach (IXGameWindowContentItemModel item in itemsToRemove) {
+                    Remove("content", item);
+                }
             }
         }
-            
-    }
 
-    public bool active {
-        get { return (bool)Get("active"); }
-        set { Set("active", value); }
+        public void RemoveContent(IXGameWindowContentItemModel item) {
+            Remove("content", item);
+        }
+
+        #endregion
     }
 }

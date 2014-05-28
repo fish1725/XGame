@@ -1,34 +1,49 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
 
-public class XGameEditor : XGame {
+using Assets._Scripts.UI.Window;
+using Assets._Scripts.XGameMVC;
+using Assets._Scripts.XGameTrigger;
+using Assets._Scripts.XGameUnit;
+using UnityEngine;
 
-    public Font font;
+#endregion
 
-    public override void Setup() {
-        base.Setup();
+namespace Assets._Scripts.XGameEditor {
+    public class XGameEditor : XGame {
+        #region Fields
 
-        UIAtlas atlas = Resources.Load<GameObject>("Mobile Cartoon GUI Rock Demo").GetComponent<UIAtlas>();
-        RegisterInstance<UIAtlas>(atlas);
+        public Font font;
 
-        if (font) {
-            RegisterInstance<Font>(font);
+        #endregion
+
+        #region Instance Methods
+
+        public override void Setup() {
+            base.Setup();
+
+            UIAtlas atlas = Resources.Load<GameObject>("Mobile Cartoon GUI Rock Demo").GetComponent<UIAtlas>();
+            RegisterInstance(atlas);
+
+            if (font) {
+                RegisterInstance(font);
+            }
+
+            InitControllers();
+
+            XGameEditorModel editorModel = Resolve<XGameEditorController>().CreateEditor();
+            CreateView<XGameEditorView, XGameEditorModel>(editorModel, gameObject);
+
+            Resolve<XGameEditorController>().InitTriggers(editorModel);
+            RegisterInstance(editorModel);
         }
 
-        InitControllers();
+        private void InitControllers() {
+            CreateController<XGameEditorController>();
+            CreateController<XGameWindowController>();
+            CreateController<XGameTriggerController>();
+            CreateController<XGameCharacterController>();
+        }
 
-        XGameEditorModel editorModel = Resolve<XGameEditorController>().CreateEditor();
-        CreateView<XGameEditorView, XGameEditorModel>(editorModel, gameObject);
-
-        Resolve<XGameEditorController>().InitTriggers(editorModel);
-        RegisterInstance<XGameEditorModel>(editorModel);
+        #endregion
     }
-
-    void InitControllers() {
-        CreateController<XGameEditorController>();
-        CreateController<XGameWindowController>();
-        CreateController<XGameTriggerController>();
-        CreateController<XGameCharacterController>();
-    }
-
 }

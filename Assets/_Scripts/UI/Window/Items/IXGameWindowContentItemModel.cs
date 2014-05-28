@@ -1,19 +1,30 @@
-﻿using System;
-using System.Collections;
+﻿#region
+
+using System;
 using System.Collections.Generic;
-using UnityEngine;
+using Assets._Scripts.XGameMVC;
 
-public interface IXGameWindowContentItemModel : IXGameModel {
-    
-    string spriteName { get; set; }
+#endregion
 
-    string key { get; set; }
+namespace Assets._Scripts.UI.Window.Items {
+    public interface IXGameWindowContentItemModel : IXGameModel {
+        #region Instance Properties
 
-    object value { get; set; }
+        string key { get; set; }
+        IXGameWindowContentItemModel model { get; set; }
+        string spriteName { get; set; }
 
-    Type type { get; set; }
+        Type type { get; set; }
+        object value { get; set; }
 
-    List<IXGameWindowContentItemModel> windowContentItems { get; set; }
+        List<IXGameWindowContentItemModel> windowContentItems { get; set; }
 
-    void Save(object value);
+        #endregion
+
+        #region Instance Methods
+
+        void Save(object data);
+
+        #endregion
+    }
 }

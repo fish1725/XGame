@@ -1,15 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
 
-public class XGameUnitView<T> : XGameView<T> where T : XGameUnitModel {
+using Assets._Scripts.XGameMVC;
 
-    // Use this for initialization
-    void Start() {
+#endregion
 
-    }
-
-    // Update is called once per frame
-    void Update() {
-
+namespace Assets._Scripts.XGameUnit {
+    public class XGameUnitView<T> : XGameView<T> where T : XGameUnitModel {
     }
 }

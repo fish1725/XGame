@@ -1,27 +1,24 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class XGameWindowMaxButton : MonoBehaviour {
+namespace Assets._Scripts.UI.Window {
+    public class XGameWindowMaxButton : MonoBehaviour {
+        public XGameWindowView target;
 
-    public XGameWindowView target;
-
-    void OnClick() {
-        if (!target) {
-            Transform temp = transform;
-            while (temp) {
-                XGameWindowView gw = temp.GetComponent<XGameWindowView>();
-                if (gw) {
-                    target = gw;
-                    break;
+        protected void OnClick() {
+            if (!target) {
+                Transform temp = transform;
+                while (temp) {
+                    var gw = temp.GetComponent<XGameWindowView>();
+                    if (gw) {
+                        target = gw;
+                        break;
+                    }
+                    temp = temp.parent;
                 }
-                temp = temp.parent;
             }
-        }
-        if (target) {
-            target.Maximum(!target.IsMax);
+            if (!target) return;
+            target.Maximum(!target.isMax);
             target.Minimum(false);
         }
     }
-
-
 }

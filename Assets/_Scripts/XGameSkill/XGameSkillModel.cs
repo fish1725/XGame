@@ -1,15 +1,23 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
 
-public class XGameSkillModel : XGameModel {
+using Assets._Scripts.XGameMVC;
 
-    public float cooldownTime {
-        get { return (float)Get("cooldownTime"); }
-        set { Set("cooldownTime", value); }
-    }
+#endregion
 
-    public float cooldownTimeR {
-        get { return (float)Get("cooldownTimeR"); }
-        set { Set("cooldownTimeR", value); }
+namespace Assets._Scripts.XGameSkill {
+    public class XGameSkillModel : XGameModel {
+        #region Instance Properties
+
+        public float cooldownTime {
+            get { return (float)Get("cooldownTime"); }
+            set { Set("cooldownTime", value); }
+        }
+
+        public float cooldownTimeR {
+            get { return (float)Get("cooldownTimeR"); }
+            set { Set("cooldownTimeR", value); }
+        }
+
+        #endregion
     }
 }
