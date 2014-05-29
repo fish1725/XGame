@@ -3,6 +3,7 @@
 using Assets._Scripts.UI.Window;
 using Assets._Scripts.XGameMVC;
 using Assets._Scripts.XGameTrigger;
+using Assets._Scripts.XGameTrigger.XGameEvent;
 using UnityEngine;
 
 #endregion

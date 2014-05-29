@@ -7,6 +7,7 @@ using Assets._Scripts.XGameMVC;
 using Assets._Scripts.XGameTrigger;
 using Assets._Scripts.XGameTrigger.XGameAction;
 using Assets._Scripts.XGameTrigger.XGameCondition;
+using Assets._Scripts.XGameTrigger.XGameEvent;
 using Assets._Scripts.XGameTrigger.XGameExpression;
 using Assets._Scripts.XGameUnit;
 

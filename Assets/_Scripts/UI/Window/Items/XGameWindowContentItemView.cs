@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using Assets._Scripts.XGameEditor;
 using Assets._Scripts.XGameMVC;
+using Assets._Scripts.XGameTrigger.XGameEvent;
 using Assets._Scripts.XGameUtil;
 using UnityEngine;
 

@@ -1,19 +1,30 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿#region
 
-public class XGameWorldEventDispatcher : XGameEventDispatcher {
+using Assets._Scripts.XGameTrigger.XGameEvent;
 
-    private static XGameWorldEventDispatcher _instance = null;
+#endregion
 
-    public static XGameWorldEventDispatcher instance {
-        get {
-            if (_instance == null) {
-                _instance = new XGameWorldEventDispatcher();
-            }
-            return _instance;
+namespace Assets._Scripts.XGameWorld {
+    public class XGameWorldEventDispatcher : XGameEventDispatcher {
+        #region Readonly & Static Fields
+
+        private static XGameWorldEventDispatcher _instance;
+
+        #endregion
+
+        #region C'tors
+
+        private XGameWorldEventDispatcher() {
         }
+
+        #endregion
+
+        #region Class Properties
+
+        public static XGameWorldEventDispatcher instance {
+            get { return _instance ?? (_instance = new XGameWorldEventDispatcher()); }
+        }
+
+        #endregion
     }
-
-    private XGameWorldEventDispatcher() { }
-
 }

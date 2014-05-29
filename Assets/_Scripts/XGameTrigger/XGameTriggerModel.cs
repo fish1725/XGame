@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Assets._Scripts.XGameMVC;
-using Assets._Scripts.XGameUnit;
 
 #endregion
 
@@ -31,13 +30,13 @@ namespace Assets._Scripts.XGameTrigger {
             }
         }
 
-        public List<XGameEvent> gameEvents {
-            get { return Get("gameEvents") as List<XGameEvent>; }
+        public List<XGameEvent.XGameEvent> gameEvents {
+            get { return Get("gameEvents") as List<XGameEvent.XGameEvent>; }
             set { Set("gameEvents", value); }
         }
 
-        public XGameTriggerModel testint {
-            get { return Get("testint") as XGameTriggerModel; }
+        public int testint {
+            get { return Get("testint") is int ? (int) Get("testint") : 0; }
             set { Set("testint", value); }
         }
 

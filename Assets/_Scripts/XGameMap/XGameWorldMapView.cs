@@ -1,6 +1,7 @@
 ﻿#region
 
 using Assets._Scripts.XGameMVC;
+using Assets._Scripts.XGameTrigger.XGameEvent;
 using ProD;
 using UnityEngine;
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Assets._Scripts.UI.Window.Items;
 using Assets._Scripts.XGameMVC;
+using Assets._Scripts.XGameTrigger.XGameEvent;
 using Assets._Scripts.XGameUtil;
 using UnityEngine;
 

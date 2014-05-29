@@ -1,6 +1,8 @@
 ﻿#region
 
 using Assets._Scripts.XGameMVC;
+using Assets._Scripts.XGameTrigger.XGameEvent;
+using Assets._Scripts.XGameWorld;
 using UnityEngine;
 
 #endregion

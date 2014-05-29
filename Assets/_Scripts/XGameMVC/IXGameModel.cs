@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using Assets._Scripts.XGameTrigger.XGameEvent;
 
 #endregion
 

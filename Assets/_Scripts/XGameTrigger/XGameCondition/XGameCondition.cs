@@ -1,9 +1,15 @@
+#region
+
 using System;
 using System.Linq.Expressions;
 using UnityEngine;
 
+#endregion
+
 namespace Assets._Scripts.XGameTrigger.XGameCondition {
     public class XGameCondition : XGameExpression.XGameExpression {
+        #region Instance Properties
+
         public override Expression result {
             get {
                 Expression exp = null;
@@ -35,17 +41,25 @@ namespace Assets._Scripts.XGameTrigger.XGameCondition {
         }
 
         public XGameExpression.XGameExpression left { get; set; }
-        public XGameExpression.XGameExpression right { get; set; }
+
         public XGameConditionOperator oper {
-            get {
-                return (XGameConditionOperator)Enum.Parse(typeof(XGameConditionOperator), nodeType.ToString());
-            }
-            set {
-                nodeType = (XGameExpressionType)(Enum.Parse(typeof(XGameExpressionType), value.ToString()));
-            }
+            get { return (XGameConditionOperator) Enum.Parse(typeof (XGameConditionOperator), nodeType.ToString()); }
+            set { nodeType = (XGameExpressionType) (Enum.Parse(typeof (XGameExpressionType), value.ToString())); }
         }
 
-        private static XGameCondition GameConditionBinaryComparison(XGameExpression.XGameExpression left, XGameExpression.XGameExpression right, XGameConditionOperator op) {
+        public XGameExpression.XGameExpression right { get; set; }
+
+        #endregion
+
+        #region Class Methods
+
+        public static XGameCondition BooleanComparison(XGameExpression.XGameExpression left,
+            XGameExpression.XGameExpression right, XGameConditionOperator op) {
+            return GameConditionBinaryComparison(left, right, op);
+        }
+
+        private static XGameCondition GameConditionBinaryComparison(XGameExpression.XGameExpression left,
+            XGameExpression.XGameExpression right, XGameConditionOperator op) {
             XGameCondition gc = new XGameCondition {
                 left = left,
                 right = right,
@@ -54,8 +68,6 @@ namespace Assets._Scripts.XGameTrigger.XGameCondition {
             return gc;
         }
 
-        public static XGameCondition BooleanComparison(XGameExpression.XGameExpression left, XGameExpression.XGameExpression right, XGameConditionOperator op) {
-            return GameConditionBinaryComparison(left, right, op);
-        }
+        #endregion
     }
 }

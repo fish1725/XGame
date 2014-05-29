@@ -1,11 +1,12 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿namespace Assets._Scripts.XGameTrigger.XGameEvent.XGameEvents {
+    public class EnterWorldEvent : XGameEvent {
+        #region C'tors
 
-public class EnterWorldEvent : XGameEvent {
+        public EnterWorldEvent() {
+            _type = XGameEventType.Enter_World;
+            _message = "Enter World.";
+        }
 
-	public EnterWorldEvent() {
-		_type = XGameEventType.Enter_World;
-		_message = "Enter World.";
-	}
-
+        #endregion
+    }
 }
