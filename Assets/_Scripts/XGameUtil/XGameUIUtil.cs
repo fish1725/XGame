@@ -98,6 +98,18 @@ namespace Assets._Scripts.XGameUtil {
             return sprite.gameObject;
         }
 
+        public static GameObject CreateTable(GameObject gameObject) {
+            UITable table = NGUITools.AddChild<UITable>(gameObject);
+            table.columns = 1;
+            table.padding.y = 5;
+            table.onReposition = () => {
+                foreach (UITable t in XGameObjectUtil.GetComponentsInAncestors<UITable>(table.gameObject)) {
+                    t.repositionNow = true;
+                }
+            };
+            return table.gameObject;
+        }
+
         #endregion
     }
 }

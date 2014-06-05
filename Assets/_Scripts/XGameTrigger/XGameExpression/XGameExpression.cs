@@ -3,6 +3,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Xml.Serialization;
+using Assets._Scripts.XGameMVC;
 
 #endregion
 
@@ -10,7 +11,7 @@ namespace Assets._Scripts.XGameTrigger.XGameExpression {
     [XmlInclude(typeof (XGameCondition.XGameCondition))]
     [XmlInclude(typeof (XGameConstantExpression))]
     [XmlInclude(typeof (XGameMethodCallExpression))]
-    public abstract class XGameExpression {
+    public abstract class XGameExpression : XGameModel {
         #region C'tors
 
         protected XGameExpression() {

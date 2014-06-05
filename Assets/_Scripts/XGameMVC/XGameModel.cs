@@ -4,14 +4,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using Assets._Scripts.UI.Window.Items;
 using Assets._Scripts.XGameTrigger.XGameEvent;
 using UnityEngine;
 
 #endregion
 
 namespace Assets._Scripts.XGameMVC {
-    public class XGameModel : IXGameWindowContentItemModel {
+    public class XGameModel : IXGameModel {
         #region Readonly & Static Fields
 
         private readonly XGameEventDispatcher _events = new XGameEventDispatcher();
@@ -54,9 +53,12 @@ namespace Assets._Scripts.XGameMVC {
             return base.ToString();
         }
 
-        public void CopyFrom(XGameModel m) {
-            foreach (String p in m.properties.Keys) {
-                Set(p, m.properties[p]);
+        public void CopyFrom(XGameModel source, bool triggerEvent = false) {
+            foreach (String p in source.properties.Keys) {
+                if (triggerEvent)
+                    Set(p, source.properties[p]);
+                else
+                    _properties[p] = source.properties[p];
             }
         }
 
@@ -74,19 +76,9 @@ namespace Assets._Scripts.XGameMVC {
             }
         }
 
-        private IXGameWindowContentItemModel CreateWindowContentItem(Type classType, object itemKey, object itemValue) {
-            if (!typeof (IXGameWindowContentItemModel).IsAssignableFrom(classType)) return null;
-            var item = Activator.CreateInstance(classType) as IXGameWindowContentItemModel;
-            if (item == null) return null;
-            item.value = itemValue;
-            item.key = itemKey.ToString();
-            item.model = this;
-            return item;
-        }
-
         #endregion
 
-        #region IXGameWindowContentItemModel Members
+        #region IXGameModel Members
 
         public void Set(string property, object data) {
             _properties[property] = data;
@@ -114,62 +106,6 @@ namespace Assets._Scripts.XGameMVC {
             get { return Get("name") as string; }
             set { Set("name", value); }
         }
-
-        [XmlIgnore]
-        public IXGameWindowContentItemModel model { get; set; }
-
-        public virtual string spriteName {
-            get { return "Buttons_RightArrow"; }
-            set { name = value; }
-        }
-
-        [XmlIgnore]
-        public virtual List<IXGameWindowContentItemModel> windowContentItems {
-            get {
-                //Debug.Log("get items.");
-                var items = new List<IXGameWindowContentItemModel>();
-                foreach (DictionaryEntry de in _properties) {
-                    Type t = de.Value.GetType();
-                    Type itemModelBaseType = typeof (XGameWindowContentItemModel);
-                    String className = "XGameWindowContentItemModel" + t.Name;
-                    Type itemModelType = Type.GetType(itemModelBaseType.Namespace + "." + className);
-                    IXGameWindowContentItemModel item = CreateWindowContentItem(itemModelType, de.Key, de.Value);
-                    if (item != null) {
-                        items.Add(item);
-                    }
-                    else {
-                        item = CreateWindowContentItem(t, de.Key, de.Value);
-                        if (item != null) {
-                            items.Add(item);
-                        }
-                    }
-                }
-                return items;
-            }
-            set { throw new NotImplementedException(); }
-        }
-
-        [XmlIgnore]
-        public virtual object value {
-            get { return this; }
-            set { CopyFrom(value as XGameModel); }
-        }
-
-        [XmlIgnore]
-        public virtual Type type {
-            get { return GetType(); }
-            set { throw new NotImplementedException(); }
-        }
-
-
-        public virtual void Save(object data) {
-            if (model == null) return;
-            Debug.Log("save key: " + key + " data: " + data);
-            model.Set(key, data);
-        }
-
-        [XmlIgnore]
-        public virtual string key { get; set; }
 
         #endregion
     }

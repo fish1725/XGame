@@ -17,21 +17,14 @@ namespace Assets._Scripts.UI.Window.Items {
         protected UILabel _itemName;
         protected UISprite _itemSprite;
         protected float _leftX = 0f;
-        private List<IXGameWindowContentItemModel> _items;
         private XGameWindowModel _window;
 
         #endregion
 
         #region Instance Properties
 
-        public virtual object value {
-            get { return Model; }
-            set { Model = value as IXGameWindowContentItemModel; }
-        }
-
-        public List<IXGameWindowContentItemModel> items {
-            get { return _items ?? (_items = Model.windowContentItems); }
-        }
+        public virtual List<XGameWindowContentItemView> children { get; set; }
+        public virtual object value { get; set; }
 
         #endregion
 
@@ -47,12 +40,15 @@ namespace Assets._Scripts.UI.Window.Items {
             base.InitEvents();
             Model.On("change:spriteName", OnChangeSpriteName);
             Model.On("change:name", OnChangeName);
-            if (Model.model != null)
-                Model.model.On("change:" + Model.key, OnChangeKeyValue);
+            if (Model.parent != null)
+                Model.parent.On("change:" + Model.key, OnChangeKeyValue);
         }
 
         public void Save() {
-            Model.Save(value);
+            if (Model.parent != null) {
+                Debug.Log("Save: " + Model.parent + " key: " + Model.key + " value: " + Model.value );
+                Model.parent.Set(Model.key, value);
+            }
         }
 
         protected virtual void InitInput() {
@@ -65,8 +61,7 @@ namespace Assets._Scripts.UI.Window.Items {
                     if (_window == null) {
                         _window = XGame.Resolve<XGameEditorController>().CreateWindow(XGame.Resolve<XGameEditorModel>());
                         XGame.Resolve<XGameWindowController>().ClearWindowContent(_window);
-                        Debug.Log("model: " + Model);
-                        foreach (IXGameWindowContentItemModel item in items) {
+                        foreach (IXGameWindowContentItemModel item in Model.children) {
                             XGame.Resolve<XGameWindowController>().AddWindowContent(_window, item);
                         }
                     }

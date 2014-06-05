@@ -189,10 +189,10 @@ namespace Assets._Scripts.UI.Window {
             Type gameType = typeof(XGame);
             if (item != null) {
                 Type viewBaseType = typeof(XGameWindowContentItemView);
-                Type viewType = Type.GetType(viewBaseType.Namespace + ".XGameWindowContentItemView" + item.value.GetType().Name) ??
+                Type viewType = Type.GetType(viewBaseType.FullName + XGameUtil.XGameUtil.GetTypeName(item.value.GetType())) ?? Type.GetType(viewBaseType.FullName + XGameUtil.XGameUtil.GetTypeName(item.value.GetType().BaseType)) ??
                                 viewBaseType;
                 MethodInfo methodDefine = gameType.GetMethod("CreateView", BindingFlags.Public | BindingFlags.Static);
-                Type[] genericTypes = { viewType, typeof(IXGameWindowContentItemModel) };
+                Type[] genericTypes = { viewType, typeof(XGameModel) };
                 MethodInfo constructed = methodDefine.MakeGenericMethod(genericTypes);
                 object[] args = { item, table.gameObject };
                 object view = constructed.Invoke(null, args);
